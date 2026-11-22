@@ -408,6 +408,36 @@ main.beben { animation: beben .45s linear 4; }
 .konto-an-text { color: rgba(255,255,255,.72); margin: 0 0 20px; position: relative; }
 @media (max-width: 860px) { #konto .breit { grid-template-columns: 1fr; } }
 
+/* ============ Post an VORIX: Tipps und Spiel-Ideen (im Konto-Bereich, noch ausgeschaltet) ============ */
+.post { grid-column: 1 / -1; margin-top: clamp(30px, 5vw, 60px); }
+.post-kopf h3 { font-family: var(--orbitron); font-size: clamp(20px, 2.6vw, 30px); margin: 0 0 8px; }
+.post-kopf p { color: rgba(255,255,255,.68); margin: 0; max-width: 720px; }
+.post-banner { margin: 18px 0 0; padding: 12px 16px; border-radius: 14px; background: rgba(255,184,31,.1); border: 1px solid rgba(255,184,31,.45); color: #ffe6a3; font-size: 16px; }
+.post-gitter { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 26px; }
+.post-feld { resize: vertical; min-height: 120px; margin-top: 18px; line-height: 1.4; }
+.post-feld:disabled { opacity: .45; cursor: not-allowed; }
+.post-zeile { display: flex; justify-content: space-between; gap: 14px; margin: 8px 0 14px; font-size: 15px; position: relative; min-height: 1.5em; }
+.post-zaehler { color: rgba(255,255,255,.45); flex-shrink: 0; }
+.post-meldung { color: var(--hell); text-align: right; }
+.post-meldung.fehler { color: #ff8c9c; }
+.post-meldung.gut { color: #7dffb0; }
+.post-kasten .knopf { align-self: flex-start; }
+.post-regeln { margin-top: 18px; font-size: 15px; color: rgba(255,255,255,.55); }
+.posteingang { margin-top: 30px; border-radius: 24px; padding: clamp(20px, 3vw, 30px); background: rgba(20,110,70,.1); border: 1px solid rgba(47,207,120,.4); }
+.posteingang h3 { font-family: var(--orbitron); font-size: 18px; letter-spacing: .1em; margin: 0; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: baseline; }
+.posteingang h3 small { font-family: var(--rajdhani); font-size: 15px; letter-spacing: 0; color: #6fe3a5; font-weight: 600; }
+.post-liste { display: grid; gap: 10px; margin-top: 16px; }
+.post-eintrag { display: grid; grid-template-columns: 1fr auto; gap: 8px 14px; align-items: center; padding: 14px 16px; border-radius: 14px; background: rgba(3,8,16,.6); border: 1px solid var(--linie); }
+.post-eintrag .kopfzeile { display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; font-size: 14px; color: rgba(255,255,255,.6); }
+.post-eintrag .kopfzeile b { color: #fff; }
+.post-eintrag .art { font-family: var(--orbitron); font-size: 10px; letter-spacing: .12em; padding: 3px 9px; border-radius: 20px; background: rgba(0,170,255,.18); border: 1px solid rgba(0,170,255,.45); color: #fff; }
+.post-eintrag .art.idee { background: rgba(122,60,255,.22); border-color: rgba(150,100,255,.6); }
+.post-eintrag .text { grid-column: 1 / -1; white-space: pre-wrap; word-break: break-word; }
+.post-eintrag .weg { background: none; border: 1px solid rgba(255,255,255,.18); color: #fff; border-radius: 10px; padding: 5px 11px; cursor: pointer; font-family: var(--rajdhani); font-size: 14px; font-weight: 600; }
+.post-eintrag .weg.sicher { background: #b3263a; border-color: #ff5c73; }
+.post-leer { color: rgba(255,255,255,.55); }
+@media (max-width: 860px) { .post-gitter { grid-template-columns: 1fr; } }
+
 /* ============ Maus-Licht ============ */
 .zeiger { position: fixed; left: 0; top: 0; z-index: 90; pointer-events: none; width: 34px; height: 34px; margin: -17px; border-radius: 50%; border: 1px solid rgba(120,200,255,.6);
   box-shadow: 0 0 18px rgba(0,170,255,.35); transition: width .35s var(--weich), height .35s var(--weich), margin .35s var(--weich), background .35s, opacity .3s; opacity: 0; }
@@ -610,6 +640,35 @@ main.beben { animation: beben .45s linear 4; }
           <button class="knopf rand" id="kAbmelden" type="button"><span class="inner">ABMELDEN</span></button>
         </div>
         <div class="konto-klein">Abmelden gilt nur hier. In Timer-Challange und den anderen Spielen bleibst du angemeldet.</div>
+      </div>
+    </div>
+
+    <!-- Post an VORIX: Tipps und Spiel-Ideen. AUSGESCHALTET (hidden), bis Papa Ja gesagt hat (Kennung XU8)
+         und der Server das Paket nachrichten-setup.sql hat. Schalter: NACHRICHTEN_AN im Skript. -->
+    <div class="post" id="post" hidden>
+      <div class="post-kopf">
+        <h3>✉️ SCHREIB AN VORIX</h3>
+        <p>Hast du einen Tipp für die Spiele oder eine Idee für das nächste Spiel? Schreib sie hier rein. Deine Nachricht kommt direkt bei VORIX an.</p>
+      </div>
+      <div class="post-banner" id="postBanner" hidden>👀 Das ist nur eine Vorschau. Senden geht erst, wenn der Vorix-Server dafür eingerichtet ist.</div>
+      <div class="post-gitter">
+        <form class="kasten-gross post-kasten" data-art="tipp" method="post" novalidate>
+          <div class="kg-kopf"><span class="kg-icon">💡</span><div><h3>TIPP FÜR DIE SPIELE</h3><p>Was soll besser werden? Was fehlt dir?</p></div></div>
+          <textarea class="feld post-feld" name="inhalt" maxlength="300" rows="4" placeholder="Dein Tipp …" aria-label="Tipp für die Spiele"></textarea>
+          <div class="post-zeile"><span class="post-zaehler">0 / 300</span><span class="post-meldung" aria-live="polite"></span></div>
+          <button class="knopf voll" type="submit"><span class="inner">TIPP SENDEN</span></button>
+        </form>
+        <form class="kasten-gross post-kasten" data-art="idee" method="post" novalidate>
+          <div class="kg-kopf"><span class="kg-icon">🎮</span><div><h3>IDEE FÜR DAS NÄCHSTE SPIEL</h3><p>Welches Spiel soll VORIX als Nächstes bauen?</p></div></div>
+          <textarea class="feld post-feld" name="inhalt" maxlength="300" rows="4" placeholder="Deine Idee …" aria-label="Idee für das nächste Spiel"></textarea>
+          <div class="post-zeile"><span class="post-zaehler">0 / 300</span><span class="post-meldung" aria-live="polite"></span></div>
+          <button class="knopf voll" type="submit"><span class="inner">IDEE SENDEN</span></button>
+        </form>
+      </div>
+      <div class="post-regeln">Du brauchst ein Vorix-Konto. Höchstens 300 Zeichen und 3 Nachrichten am Tag. Bleib freundlich und schreib nichts Privates rein: keine Adresse, keine Telefonnummer, kein Passwort.</div>
+      <div class="posteingang" id="posteingang" hidden>
+        <h3>📬 POSTEINGANG <span id="postAnzahl"></span><small>Das siehst nur du als Admin.</small></h3>
+        <div class="post-liste" id="postListe"></div>
       </div>
     </div>
   </div>
@@ -1742,21 +1801,23 @@ async function kontoAnmelden(eingabeName, passwort) {
   if (error) throw error;
   const id = data.user.id;
   // Den echten Namen (mit Groß- und Kleinschreibung) aus dem Profil holen und prüfen, ob das Konto gesperrt ist (nur lesen)
-  let echterName = name, gesperrt = false, grund = '';
+  let echterName = name, gesperrt = false, grund = '', admin = false;
   try {
-    let antwort = await c.from('profiles').select('username,banned,ban_reason').eq('id', id).maybeSingle();
+    let antwort = await c.from('profiles').select('username,banned,ban_reason,is_admin').eq('id', id).maybeSingle();
     if (antwort.error) antwort = await c.from('profiles').select('username').eq('id', id).maybeSingle();
     if (antwort.data) {
       echterName = antwort.data.username || name;
       gesperrt = antwort.data.banned === true;
       grund = antwort.data.ban_reason || '';
+      admin = antwort.data.is_admin === true;
     }
   } catch (e) { /* dann bleibt der eingegebene Name */ }
   if (gesperrt) {
     try { await c.auth.signOut({ scope: 'local' }); } catch (e) {}
     const f = new Error('gesperrt'); f.grund = grund; throw f;
   }
-  merkSchreiben({ konto: { name: String(echterName).slice(0, 20) } });   // gemerkt wird nur der Name, sonst nichts
+  // Gemerkt wird nur der Name. admin blendet später nur den Posteingang ein; ob es erlaubt ist, prüft der Server.
+  merkSchreiben({ konto: { name: String(echterName).slice(0, 20), admin } });
 }
 async function kontoAbmelden() {
   try { const c = await kontoClient(); await c.auth.signOut({ scope: 'local' }); } catch (e) { /* offline – egal */ }
@@ -1791,6 +1852,7 @@ function kontoZeigen() {
   if (an) document.getElementById('kAngemeldet').textContent = k.name;
   navKonto.textContent = an ? '👤 ' + k.name : 'ANMELDEN';
   navKonto.classList.toggle('an', an);
+  postZeigen();
 }
 kontoAus.addEventListener('submit', async e => {      // Knopf ANMELDEN oder Enter im Passwort-Feld
   e.preventDefault();
@@ -1810,6 +1872,120 @@ kontoAus.addEventListener('submit', async e => {      // Knopf ANMELDEN oder Ent
   }
 });
 document.getElementById('kAbmelden').addEventListener('click', async () => { await kontoAbmelden(); kontoZeigen(); });
+
+/* =====================================================================
+   POST AN VORIX: Tipps und Spiel-Ideen (Ibos Wunsch vom 22.11.2026)
+   AUSGESCHALTET, bis Papa Ja gesagt hat (Kennung XU8) UND der Server das Paket
+   „nachrichten-setup.sql“ hat. Solange der Schalter aus ist, sieht man nichts davon
+   und es geht dafür nichts an den Server.
+   Mit ?vorschau in der Adresse sieht man, wie es aussehen wird (ohne Senden, mit Beispielen).
+   Zum Prüfen vor dem Einschalten: hq_nachrichten_lesen aufrufen, PGRST202 heißt „noch nicht ausgeführt“.
+   ===================================================================== */
+const NACHRICHTEN_AN = false;
+const NACHRICHTEN_VORSCHAU = !NACHRICHTEN_AN && new URLSearchParams(location.search).has('vorschau');
+const post = document.getElementById('post'), posteingang = document.getElementById('posteingang'), postListe = document.getElementById('postListe');
+function postFehlerText(e) {
+  const m = String((e && (e.message || e.code)) || '');
+  if (/Nicht angemeldet|JWT/i.test(m)) return 'Melde dich bitte neu an.';
+  if (/Tageslimit/i.test(m)) return 'Du hast heute schon 3 Nachrichten geschickt. Morgen geht es weiter.';
+  if (/Laenge/i.test(m)) return 'Schreib 3 bis 300 Zeichen.';
+  if (/gesperrt/i.test(m)) return '⛔ Dieses Konto ist gesperrt.';
+  if (/PGRST202|Could not find the function/i.test(m)) return 'Das Postfach ist noch nicht eingerichtet.';
+  if (/fetch|network|load failed|konnte nicht laden/i.test(m)) return 'Keine Verbindung zum Vorix-Server. Ist das Internet an?';
+  return 'Das hat nicht geklappt. Versuch es gleich nochmal.';
+}
+function postMeldung(form, text, art) {
+  const m = form.querySelector('.post-meldung');
+  m.textContent = text; m.className = 'post-meldung' + (art ? ' ' + art : '');
+}
+// Zeigt die Felder (nur wenn eingeschaltet oder Vorschau) und passt sie an: angemeldet oder nicht, Admin oder nicht
+function postZeigen() {
+  if (!NACHRICHTEN_AN && !NACHRICHTEN_VORSCHAU) return;
+  const k = merkLesen().konto, an = !!(k && k.name), darf = an || NACHRICHTEN_VORSCHAU;
+  post.hidden = false;
+  document.getElementById('postBanner').hidden = !NACHRICHTEN_VORSCHAU;
+  post.querySelectorAll('.post-kasten').forEach(form => {
+    form.querySelector('textarea').disabled = !darf;
+    form.querySelector('button').disabled = !darf;
+    postMeldung(form, darf ? '' : 'Zum Senden musst du oben angemeldet sein.', '');
+  });
+  const admin = NACHRICHTEN_VORSCHAU || (an && k.admin === true);
+  posteingang.hidden = !admin;
+  if (admin) postLaden();
+}
+post.querySelectorAll('.post-kasten').forEach(form => {
+  const feld = form.querySelector('textarea'), zaehler = form.querySelector('.post-zaehler'), knopf = form.querySelector('button');
+  feld.addEventListener('input', () => { zaehler.textContent = feld.value.length + ' / 300'; });
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (knopf.disabled) return;
+    const text = feld.value.replace(/\s+/g, ' ').trim();
+    if (text.length < 3) { postMeldung(form, 'Schreib mindestens 3 Zeichen.', 'fehler'); return; }
+    if (!NACHRICHTEN_AN) { postMeldung(form, 'Vorschau: Senden geht noch nicht.', ''); return; }
+    knopf.disabled = true; postMeldung(form, 'Wird gesendet …', '');
+    try {
+      const c = await kontoClient();
+      const { data, error } = await c.rpc('hq_nachricht_senden', { p_art: form.dataset.art, p_inhalt: text });
+      if (error) throw error;
+      feld.value = ''; zaehler.textContent = '0 / 300';
+      postMeldung(form, '✅ Danke! Deine Nachricht ist angekommen.' + (typeof data === 'number' ? ' Heute kannst du noch ' + data + ' schicken.' : ''), 'gut');
+      const r = form.getBoundingClientRect();
+      Funken.spruehen(r.left + r.width / 2, r.top + r.height / 2, 50, 1.4);
+      if (!posteingang.hidden) postLaden();
+    } catch (fehler) {
+      postMeldung(form, postFehlerText(fehler), 'fehler');
+    } finally {
+      knopf.disabled = false;
+    }
+  });
+});
+// Posteingang: nur für Admins. Ob jemand Admin ist, prüft der Server. Alle Texte werden als reiner Text gezeigt.
+async function postLaden() {
+  if (!NACHRICHTEN_AN) {      // Vorschau: zwei erfundene Beispiele, damit man sieht, wie es aussehen wird
+    const jetzt = new Date().toISOString();
+    postMalen([
+      { id: 0, art: 'tipp', inhalt: 'BEISPIEL: Mach in Nitro City bitte noch mehr Autos!', username: 'BeispielSpieler', created_at: jetzt, beispiel: true },
+      { id: 0, art: 'idee', inhalt: 'BEISPIEL: Ein Spiel, in dem man einen Freizeitpark baut.', username: 'NochEinBeispiel', created_at: jetzt, beispiel: true },
+    ]);
+    return;
+  }
+  postListe.textContent = 'Lädt …';
+  try {
+    const c = await kontoClient();
+    const { data, error } = await c.rpc('hq_nachrichten_lesen', { p_limit: 100 });
+    if (error) throw error;
+    postMalen(data || []);
+  } catch (fehler) { postListe.textContent = postFehlerText(fehler); }
+}
+function postMalen(zeilen) {
+  postListe.textContent = '';
+  document.getElementById('postAnzahl').textContent = zeilen.length ? '(' + zeilen.length + ')' : '';
+  if (!zeilen.length) { postListe.append(el('div', 'post-leer', 'Noch keine Nachrichten.')); return; }
+  zeilen.forEach(z => {
+    const eintrag = el('div', 'post-eintrag'), kopf = el('div', 'kopfzeile');
+    const wann = new Date(z.created_at).toLocaleString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    kopf.append(el('span', 'art ' + (z.art === 'idee' ? 'idee' : 'tipp'), z.art === 'idee' ? 'IDEE' : 'TIPP'), el('b', '', z.username || 'Unbekannt'), el('span', '', wann + ' Uhr'));
+    const weg = el('button', 'weg', '🗑️ Löschen'); weg.type = 'button';
+    weg.addEventListener('click', async () => {
+      if (z.beispiel) { eintrag.remove(); return; }
+      if (!weg.classList.contains('sicher')) {      // erst „Sicher?“, beim zweiten Tippen wird gelöscht
+        weg.classList.add('sicher'); weg.textContent = 'Sicher?';
+        setTimeout(() => { weg.classList.remove('sicher'); weg.textContent = '🗑️ Löschen'; }, 3000);
+        return;
+      }
+      weg.disabled = true;
+      try {
+        const c = await kontoClient();
+        const { error } = await c.rpc('hq_nachricht_loeschen', { p_id: z.id });
+        if (error) throw error;
+        postLaden();
+      } catch (fehler) { weg.disabled = false; weg.classList.remove('sicher'); weg.textContent = 'Ging nicht'; }
+    });
+    eintrag.append(kopf, weg, el('div', 'text', z.inhalt));
+    postListe.append(eintrag);
+  });
+}
+
 kontoZeigen();
 setTimeout(kontoSpaeterPruefen, 1500);   // gilt die Anmeldung mit dem Vorix-Konto noch?
 
