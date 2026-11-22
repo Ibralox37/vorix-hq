@@ -15,7 +15,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://ibralox37.github.io; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://ibralox37.github.io; connect-src 'self' https://ygdgqpedwdpbxlicviks.supabase.co; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 
@@ -385,6 +385,29 @@ main.beben { animation: beben .45s linear 4; }
   .schritt { transition: none !important; opacity: 1 !important; transform: none !important; }
 }
 
+/* ============ Vorix-Konto: Bereich zum Anmelden und Knopf oben rechts ============ */
+[hidden] { display: none !important; }
+.navlinks { min-width: 0; margin-left: auto; }
+.nav-konto { flex-shrink: 0; max-width: 38vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-decoration: none; font-family: var(--orbitron); font-size: 11px; font-weight: 700; letter-spacing: .14em; padding: 9px 14px; border-radius: 11px; color: #fff; background: rgba(0,150,255,.14); border: 1px solid rgba(0,170,255,.5); transition: background .25s, box-shadow .25s; }
+.nav-konto:hover { background: rgba(0,150,255,.3); box-shadow: 0 0 20px rgba(0,170,255,.35); }
+.nav-konto.an { background: rgba(20,110,70,.35); border-color: rgba(47,207,120,.6); }
+#konto .breit { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(30px, 6vw, 80px); align-items: center; }
+.konto-punkte { list-style: none; padding: 0; margin: 26px 0 0; display: grid; gap: 10px; }
+.konto-punkte li { display: flex; gap: 12px; align-items: baseline; color: rgba(255,255,255,.75); }
+.konto-punkte li::before { content: "✦"; color: var(--blau); text-shadow: 0 0 10px var(--blau); }
+.konto-kasten h3 { font-family: var(--orbitron); font-size: 18px; letter-spacing: .12em; margin: 0 0 6px; position: relative; }
+.feld-label { display: block; font-family: var(--orbitron); font-size: 10px; letter-spacing: .3em; color: var(--hell); opacity: .85; margin: 16px 0 6px; position: relative; }
+.feld { width: 100%; padding: 15px 16px; border-radius: 14px; border: 1px solid rgba(140,200,255,.25); background: rgba(3,8,16,.7); color: #fff; font-family: var(--rajdhani); font-size: 19px; font-weight: 600; outline: none; position: relative; transition: border-color .25s, box-shadow .25s; }
+.feld:focus { border-color: var(--blau); box-shadow: 0 0 0 3px rgba(0,170,255,.18), 0 0 24px rgba(0,170,255,.2); }
+.fehler-text { min-height: 1.5em; margin: 10px 0 8px; color: #ff8c9c; font-size: 16px; position: relative; }
+.konto-kasten .knopf { flex: 1 1 auto; }
+.knopf:disabled { opacity: .6; cursor: wait; }
+.konto-klein { font-size: 15px; color: rgba(255,255,255,.55); margin-top: 14px; position: relative; }
+.konto-status { font-family: var(--orbitron); font-size: 10px; letter-spacing: .3em; color: #6fe3a5; margin-top: 12px; position: relative; }
+.konto-name { font-family: var(--orbitron); font-weight: 900; font-size: clamp(24px, 3vw, 36px); margin: 4px 0 10px; word-break: break-all; text-shadow: 0 0 26px rgba(0,170,255,.5); position: relative; }
+.konto-an-text { color: rgba(255,255,255,.72); margin: 0 0 20px; position: relative; }
+@media (max-width: 860px) { #konto .breit { grid-template-columns: 1fr; } }
+
 /* ============ Maus-Licht ============ */
 .zeiger { position: fixed; left: 0; top: 0; z-index: 90; pointer-events: none; width: 34px; height: 34px; margin: -17px; border-radius: 50%; border: 1px solid rgba(120,200,255,.6);
   box-shadow: 0 0 18px rgba(0,170,255,.35); transition: width .35s var(--weich), height .35s var(--weich), margin .35s var(--weich), background .35s, opacity .3s; opacity: 0; }
@@ -450,6 +473,7 @@ main.beben { animation: beben .45s linear 4; }
     <a href="#ueber">ÜBER</a>
     <a href="#infos">INFOS</a>
   </div>
+  <a class="nav-konto" id="navKonto" href="#konto">ANMELDEN</a>
 </nav>
 
 <main>
@@ -549,11 +573,53 @@ main.beben { animation: beben .45s linear 4; }
   </div>
 </section>
 
+<!-- ============ VORIX-KONTO: Anmelden mit dem Konto von Timer Challenge ============ -->
+<section id="konto">
+  <div class="breit">
+    <div>
+      <div class="etikett" data-rein>03 — VORIX-KONTO</div>
+      <h2 class="titel" data-titel><span class="zeile"><span>Ein Konto.</span></span><span class="zeile"><span class="leuchten">Alle Spiele.</span></span></h2>
+      <p class="untertitel" data-rein style="--verz:.1s">Melde dich mit deinem Vorix-Konto an. Es ist dasselbe Konto wie in Timer-Challange, Vorix Spotter, Jump over the Wall, Vorix Stack und Vorix Loop.</p>
+      <ul class="konto-punkte" data-rein style="--verz:.2s">
+        <li>Ein Name und ein Passwort für alle Browser-Spiele</li>
+        <li>Neue Konten erstellst du in Timer-Challange</li>
+        <li>Spielen geht auch ohne Konto, als Gast</li>
+      </ul>
+    </div>
+    <div class="kasten-gross konto-kasten" data-rein="rechts">
+      <form id="kontoAus" method="post" autocomplete="on" novalidate>
+        <h3>🔑 ANMELDEN</h3>
+        <label class="feld-label" for="kName">BENUTZERNAME</label>
+        <input class="feld" id="kName" name="username" maxlength="20" autocomplete="username" autocapitalize="off" autocorrect="off" spellcheck="false">
+        <label class="feld-label" for="kPasswort">PASSWORT</label>
+        <input class="feld" id="kPasswort" name="password" type="password" maxlength="72" autocomplete="current-password">
+        <div class="fehler-text" id="kFehler" aria-live="polite"></div>
+        <div class="kg-knoepfe">
+          <button class="knopf voll" id="kAnmelden" type="submit"><span class="inner">ANMELDEN</span></button>
+          <a class="knopf rand" href="https://ibralox37.github.io/Timer-/" target="_blank" rel="noopener"><span class="inner">✨ NEUES KONTO ↗</span></a>
+        </div>
+        <div class="konto-klein">Neue Konten erstellst du in Timer-Challange. Dein Passwort geht nur an den Vorix-Server.</div>
+      </form>
+      <div id="kontoAn" hidden>
+        <h3>👤 VORIX-KONTO</h3>
+        <div class="konto-status">ANGEMELDET ALS</div>
+        <div class="konto-name" id="kAngemeldet"></div>
+        <p class="konto-an-text">Schön, dass du da bist! In den Spielen meldest du dich mit demselben Namen und Passwort an.</p>
+        <div class="kg-knoepfe">
+          <a class="knopf voll" href="#spiele"><span class="inner">▶ ZU DEN SPIELEN</span></a>
+          <button class="knopf rand" id="kAbmelden" type="button"><span class="inner">ABMELDEN</span></button>
+        </div>
+        <div class="konto-klein">Abmelden gilt nur hier. In Timer-Challange und den anderen Spielen bleibst du angemeldet.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ COMMUNITY ============ -->
 <section id="community">
   <div class="breit">
     <div>
-      <div class="etikett" data-rein>03 — COMMUNITY</div>
+      <div class="etikett" data-rein>04 — COMMUNITY</div>
       <h2 class="titel" data-titel><span class="zeile"><span>Werde Teil</span></span><span class="zeile"><span class="leuchten">von VORIX HQ</span></span></h2>
       <p class="untertitel" data-rein style="--verz:.1s">VORIX HQ ist die offizielle VORIX-Community auf Roblox. Jeder darf beitreten.</p>
       <ul class="vorteile">
@@ -577,7 +643,7 @@ main.beben { animation: beben .45s linear 4; }
 <!-- ============ NEWS ============ -->
 <section id="news">
   <div class="breit">
-    <div class="etikett" data-rein>04 — NEUIGKEITEN</div>
+    <div class="etikett" data-rein>05 — NEUIGKEITEN</div>
     <h2 class="titel" data-titel><span class="zeile"><span>Was gerade</span></span><span class="zeile"><span class="leuchten">passiert</span></span></h2>
     <div class="zeitstrahl" id="zeitstrahl">
       <div class="spur"><i id="spurVoll"></i></div>
@@ -630,7 +696,7 @@ main.beben { animation: beben .45s linear 4; }
 <!-- ============ SO ENTSTEHT EIN VORIX-SPIEL ============ -->
 <section id="ablauf">
   <div class="breit">
-    <div class="etikett" data-rein>05 — HINTER DEN KULISSEN</div>
+    <div class="etikett" data-rein>06 — HINTER DEN KULISSEN</div>
     <h2 class="titel" data-titel><span class="zeile"><span>So entsteht</span></span><span class="zeile"><span class="leuchten">ein VORIX-Spiel</span></span></h2>
     <div class="ablauf" data-rein>
       <div class="ablauf-kabel" aria-hidden="true"><i></i><b></b></div>
@@ -645,7 +711,7 @@ main.beben { animation: beben .45s linear 4; }
 <!-- ============ ÜBER ============ -->
 <section id="ueber">
   <div class="breit">
-    <div class="etikett" data-rein>06 — ÜBER VORIX</div>
+    <div class="etikett" data-rein>07 — ÜBER VORIX</div>
     <p class="scrub" id="scrub">VORIX ist das Spiele-Studio von Ibralox37. Hier entstehen Spiele für den *Browser* und für *Roblox*, von der Timer-Challange bis zum Autorennen durch eine ganze Stadt. Jedes Spiel ist *kostenlos* spielbar. Und das ist erst der *Anfang.*</p>
     <div class="unterschrift" data-rein>
       <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M3 8 H14 Q18 8 21 12 L32 31 Q33.5 33 37 33" fill="none" stroke="#00aaff" stroke-width="3" stroke-linecap="round"/><path d="M5 37 L36 3" fill="none" stroke="#7fe0ff" stroke-width="3" stroke-linecap="round"/></svg>
@@ -657,7 +723,7 @@ main.beben { animation: beben .45s linear 4; }
 <!-- ============ INFOS ============ -->
 <section id="infos">
   <div class="breit">
-    <div class="etikett" data-rein>07 — INFOS</div>
+    <div class="etikett" data-rein>08 — INFOS</div>
     <h2 class="titel" data-titel><span class="zeile"><span>Gut zu</span></span><span class="zeile"><span class="leuchten">wissen</span></span></h2>
     <div class="fragen">
       <div class="frage" data-rein><button aria-expanded="false">Was kostet das?<span class="plus"></span></button>
@@ -1598,6 +1664,7 @@ function kabelSturm() {
 let getippt = '', tipps = [];
 addEventListener('keydown', e => {
   if (!e.key || e.key.length !== 1 || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.target && e.target.closest && e.target.closest('input, textarea')) return;   // beim Tippen ins Anmelde-Feld kein Sturm
   getippt = (getippt + e.key.toLowerCase()).slice(-5);
   if (getippt === 'vorix') { getippt = ''; kabelSturm(); }
 });
@@ -1625,6 +1692,126 @@ Object.keys(FARBEN).forEach(key => {
   farbwahl.append(b);
 });
 farbeSetzen(merkLesen().farbe, false);
+
+/* =====================================================================
+   VORIX-KONTO: Anmelden und Abmelden (genau wie in Jump over the Wall und Spotter)
+   Erlaubt ist NUR Anmelden und den Namen anzeigen. VORIX HQ speichert NICHTS auf dem Server.
+   WICHTIG – nicht ändern:
+    - speicherName: VORIX HQ hat seine EIGENE Sitzung. Nie den Sitzungs-Schlüssel von Timer Challenge
+      (sb-…) benutzen, sonst kann ein Abmelden hier Timer Challenge durcheinanderbringen.
+    - domain und Namensregel: genau wie in Timer Challenge, sonst passen die Konten nicht zusammen.
+    - Abmelden nur mit scope 'local'. Ohne das wäre man auch in Timer Challenge abgemeldet, auf allen Geräten.
+    - VORIX HQ legt keine Konten an und löscht keine. Das macht nur Timer Challenge.
+   ===================================================================== */
+const KONTO = {
+  url: 'https://ygdgqpedwdpbxlicviks.supabase.co',
+  schluessel: 'sb_publishable_QtZnXFRDB8ypHHmOuY-qLg_MI-52tM5',   // öffentlicher Schlüssel, darf im Code stehen
+  bibliothek: 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2',
+  pruefsumme: 'sha384-WgXwGL6fUsYJWNaKJgVbrJKGRQwc1vieh2oy4kw9nXqpNDz3tdSsqEYUgeHD/NuF',   // Fingerabdruck: der Browser lädt die Datei nur, wenn sie genau diese ist (neue Version = neuer Fingerabdruck)
+  speicherName: 'vorixHQKonto',
+  domain: '@spieler.kronix-timer.app',
+};
+let sb = null;   // Verbindung zum Vorix-Server. Wird erst geladen, wenn jemand das Konto benutzt.
+function skriptLaden(src, pruefsumme) {
+  return new Promise((ok, fehler) => {
+    const s = document.createElement('script');
+    s.src = src; s.async = true; s.crossOrigin = 'anonymous';
+    if (pruefsumme) s.integrity = pruefsumme;
+    s.onload = ok; s.onerror = () => fehler(new Error('Konnte nicht laden: ' + src));
+    document.head.appendChild(s);
+  });
+}
+async function kontoClient() {
+  if (sb) return sb;
+  if (!window.supabase) await skriptLaden(KONTO.bibliothek, KONTO.pruefsumme);
+  sb = window.supabase.createClient(KONTO.url, KONTO.schluessel, {
+    auth: { storageKey: KONTO.speicherName, persistSession: true, autoRefreshToken: true, detectSessionInUrl: false },
+  });
+  return sb;
+}
+// Genau dieselbe Regel wie in Timer Challenge: Leerzeichen weg, 3–20 Zeichen, dann kleinschreiben + Domain
+const nameGueltig = name => /^[a-zA-Z0-9_]{3,20}$/.test(name);
+const nameZuMail = name => name.toLowerCase() + KONTO.domain;
+
+async function kontoAnmelden(eingabeName, passwort) {
+  const name = String(eingabeName || '').trim();
+  if (!nameGueltig(name)) throw new Error('name');
+  if (String(passwort || '').length < 6) throw new Error('passwort');
+  const c = await kontoClient();
+  const { data, error } = await c.auth.signInWithPassword({ email: nameZuMail(name), password: passwort });
+  if (error) throw error;
+  const id = data.user.id;
+  // Den echten Namen (mit Groß- und Kleinschreibung) aus dem Profil holen und prüfen, ob das Konto gesperrt ist (nur lesen)
+  let echterName = name, gesperrt = false, grund = '';
+  try {
+    let antwort = await c.from('profiles').select('username,banned,ban_reason').eq('id', id).maybeSingle();
+    if (antwort.error) antwort = await c.from('profiles').select('username').eq('id', id).maybeSingle();
+    if (antwort.data) {
+      echterName = antwort.data.username || name;
+      gesperrt = antwort.data.banned === true;
+      grund = antwort.data.ban_reason || '';
+    }
+  } catch (e) { /* dann bleibt der eingegebene Name */ }
+  if (gesperrt) {
+    try { await c.auth.signOut({ scope: 'local' }); } catch (e) {}
+    const f = new Error('gesperrt'); f.grund = grund; throw f;
+  }
+  merkSchreiben({ konto: { name: String(echterName).slice(0, 20) } });   // gemerkt wird nur der Name, sonst nichts
+}
+async function kontoAbmelden() {
+  try { const c = await kontoClient(); await c.auth.signOut({ scope: 'local' }); } catch (e) { /* offline – egal */ }
+  try { localStorage.removeItem(KONTO.speicherName); } catch (e) {}   // nur UNSERE Sitzung, nie die von Timer Challenge
+  merkSchreiben({ konto: null });
+}
+// Nachsehen, ob die Anmeldung noch gilt. Ohne Internet bleibt der Name einfach stehen.
+function kontoSpaeterPruefen() {
+  if (!merkLesen().konto || !navigator.onLine) return;
+  kontoClient()
+    .then(c => c.auth.getSession())
+    .then(({ data }) => { if (!data.session) { merkSchreiben({ konto: null }); kontoZeigen(); } })
+    .catch(() => { /* Server nicht erreichbar – Name bleibt stehen */ });
+}
+function kontoFehlerText(e) {
+  const m = String((e && (e.message || e.code)) || '');
+  if (m === 'name') return 'Der Name hat 3 bis 20 Zeichen: Buchstaben, Zahlen oder _ (so wie bei Timer Challenge).';
+  if (m === 'passwort') return 'Das Passwort hat mindestens 6 Zeichen.';
+  if (m === 'gesperrt') return '⛔ Dieses Konto ist gesperrt.' + (e.grund ? ' Grund: ' + e.grund : '');
+  if (/invalid login credentials|invalid_credentials/i.test(m)) return 'Name oder Passwort stimmt nicht.';
+  if (/rate limit|too many/i.test(m)) return 'Zu viele Versuche. Warte kurz und versuch es dann nochmal.';
+  if (/fetch|network|load failed|konnte nicht laden/i.test(m)) return 'Keine Verbindung zum Vorix-Server. Ist das Internet an?';
+  return 'Das hat nicht geklappt. Versuch es gleich nochmal.';
+}
+const kontoAus = document.getElementById('kontoAus'), kontoAn = document.getElementById('kontoAn');
+const kName = document.getElementById('kName'), kPasswort = document.getElementById('kPasswort');
+const kFehler = document.getElementById('kFehler'), kKnopf = document.getElementById('kAnmelden');
+const navKonto = document.getElementById('navKonto');
+function kontoZeigen() {
+  const k = merkLesen().konto, an = !!(k && k.name);
+  kontoAus.hidden = an; kontoAn.hidden = !an;
+  if (an) document.getElementById('kAngemeldet').textContent = k.name;
+  navKonto.textContent = an ? '👤 ' + k.name : 'ANMELDEN';
+  navKonto.classList.toggle('an', an);
+}
+kontoAus.addEventListener('submit', async e => {      // Knopf ANMELDEN oder Enter im Passwort-Feld
+  e.preventDefault();
+  if (kKnopf.disabled) return;
+  const schrift = kKnopf.querySelector('.inner');
+  kKnopf.disabled = true; schrift.textContent = 'ANMELDEN …'; kFehler.textContent = '';
+  try {
+    await kontoAnmelden(kName.value, kPasswort.value);
+    kPasswort.value = '';
+    kontoZeigen();
+    const r = kontoAn.getBoundingClientRect();
+    Funken.spruehen(r.left + r.width / 2, r.top + 70, 60, 1.5);
+  } catch (fehler) {
+    kFehler.textContent = kontoFehlerText(fehler);
+  } finally {
+    kKnopf.disabled = false; schrift.textContent = 'ANMELDEN';
+  }
+});
+document.getElementById('kAbmelden').addEventListener('click', async () => { await kontoAbmelden(); kontoZeigen(); });
+kontoZeigen();
+setTimeout(kontoSpaeterPruefen, 1500);   // gilt die Anmeldung mit dem Vorix-Konto noch?
 
 /* =====================================================================
    HAUPT-SCHLEIFE
