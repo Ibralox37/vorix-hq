@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<!-- ==========================================================
+     VORIX HQ – die Zentrale von VORIX
+     © 2026 Ibralox37 / VORIX – WE CREATE GAMES
+
+     Gebaut am 22.11.2026. Die Idee:
+     „eine krasse Web mit ultra krassen echten Animationen,
+     beim Logo das X wie Kabel, die sich die ganze Zeit bewegen,
+     richtig professionell".
+
+     Alles in EINER Datei, ohne fremde Programme (nur die
+     Google-Schrift). Das X wird live auf zwei Canvas gemalt
+     (Text hinten, Kabel vorne = echte 3D-Tiefe).
+========================================================== -->
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://ibralox37.github.io; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+
+<title>VORIX HQ – WE CREATE GAMES</title>
+<meta name="description" content="VORIX HQ – die Zentrale von VORIX. Alle Spiele von Ibralox37 für Browser und Roblox, die Community VORIX HQ, Neuigkeiten und Infos. Alles kostenlos spielbar.">
+<link rel="canonical" href="https://ibralox37.github.io/vorix-hq/">
+<link rel="icon" type="image/png" href="https://ibralox37.github.io/icon-192.png">
+<meta name="theme-color" content="#03070d">
+
+<meta property="og:site_name" content="VORIX – WE CREATE GAMES">
+<meta property="og:title" content="VORIX HQ – WE CREATE GAMES">
+<meta property="og:description" content="Die Zentrale von VORIX: alle Spiele, die Roblox-Community VORIX HQ, Neuigkeiten und Infos.">
+<meta property="og:image" content="https://ibralox37.github.io/vorschau.png">
+<meta property="og:url" content="https://ibralox37.github.io/vorix-hq/">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "VORIX HQ",
+  "alternateName": "VORIX – WE CREATE GAMES",
+  "url": "https://ibralox37.github.io/vorix-hq/",
+  "publisher": { "@type": "Organization", "name": "VORIX – WE CREATE GAMES", "url": "https://ibralox37.github.io/" }
+}
+</script>
+
+<style>
+/* ============ Grund-Design „Vorix Blau" ============ */
+:root {
+  --blau: #00aaff; --blau-tief: #0a5cff; --hell: #8fdcff; --dunkel: #03070d;
+  --karte: #0a1424; --linie: rgba(120,190,255,.14);
+  --orbitron: "Orbitron", "Rajdhani", Arial, sans-serif;
+  --rajdhani: "Rajdhani", "Segoe UI", Arial, sans-serif;
+  --weich: cubic-bezier(.16,1,.3,1);
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; }
+html, body { margin: 0; }
+body {
+  background: var(--dunkel); color: #fff; font-family: var(--rajdhani); font-size: 18px; line-height: 1.5;
+  overflow-x: hidden;
+}
+body.laedt { overflow: hidden; }
+a { color: inherit; }
+img { display: block; }
+::selection { background: var(--blau); color: #000; }
+
+#hintergrund { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+main, nav, footer { position: relative; z-index: 2; }
+main { overflow-x: clip; }   /* nichts darf seitlich über den Rand ragen (wichtig am Handy) */
+
+/* ============ Lade-Bildschirm ============ */
+#lader { position: fixed; inset: 0; z-index: 100; pointer-events: all; }
+#lader .tuer { position: absolute; left: 0; right: 0; height: 50.5%; background: #02050a; transition: transform 1s var(--weich); }
+#lader .tuer.oben { top: 0; border-bottom: 1px solid rgba(0,170,255,.0); }
+#lader .tuer.unten { bottom: 0; }
+#lader .lader-inhalt { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; z-index: 2; transition: opacity .4s, transform .6s var(--weich); }
+.lader-wort { font-family: var(--orbitron); font-weight: 900; font-size: clamp(26px, 6vw, 46px); letter-spacing: .3em; padding-left: .3em; }
+.lader-wort span { color: var(--blau); text-shadow: 0 0 24px rgba(0,170,255,.8); }
+.lader-balken { width: min(320px, 70vw); height: 2px; background: rgba(255,255,255,.08); overflow: hidden; border-radius: 2px; }
+.lader-balken i { display: block; height: 100%; width: 100%; transform-origin: left; transform: scaleX(0); background: linear-gradient(90deg, var(--blau-tief), var(--blau), #fff); box-shadow: 0 0 12px var(--blau); }
+.lader-zahl { font-family: var(--orbitron); font-size: 13px; letter-spacing: .35em; opacity: .55; }
+#lader.weg { pointer-events: none; }
+#lader.weg .lader-inhalt { opacity: 0; transform: scale(1.15); }
+#lader.weg .tuer.oben { transform: translateY(-101%); }
+#lader.weg .tuer.unten { transform: translateY(101%); }
+
+/* ============ Leiste oben ============ */
+#fortschritt { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 60; transform-origin: left; transform: scaleX(0);
+  background: linear-gradient(90deg, var(--blau-tief), var(--blau), #dff6ff); box-shadow: 0 0 10px var(--blau); }
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: calc(14px + env(safe-area-inset-top)) clamp(16px, 4vw, 44px) 14px; transition: background .4s, padding .4s, border-color .4s; border-bottom: 1px solid transparent; }
+nav.fest { background: rgba(3,7,13,.72); backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4); border-color: var(--linie); padding-top: calc(10px + env(safe-area-inset-top)); padding-bottom: 10px; }
+.marke { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--orbitron); font-weight: 900; letter-spacing: .18em; font-size: 15px; white-space: nowrap; }
+.marke svg { width: 26px; height: 26px; filter: drop-shadow(0 0 6px rgba(0,170,255,.8)); }
+.marke b { color: var(--blau); font-weight: 900; }
+.navlinks { display: flex; gap: clamp(10px, 2.2vw, 30px); overflow-x: auto; scrollbar-width: none; }
+.navlinks::-webkit-scrollbar { display: none; }
+.navlinks a { text-decoration: none; font-family: var(--orbitron); font-size: 11px; letter-spacing: .2em; opacity: .7; position: relative; padding: 6px 0; white-space: nowrap; transition: opacity .2s; }
+.navlinks a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--blau); box-shadow: 0 0 8px var(--blau); transform: scaleX(0); transition: transform .35s var(--weich); }
+.navlinks a:hover, .navlinks a.aktiv { opacity: 1; }
+.navlinks a:hover::after, .navlinks a.aktiv::after { transform: scaleX(1); }
+
+/* ============ Hero mit dem 3D-Logo ============ */
+#hero { position: relative; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 90px 0 70px; overflow: hidden; }
+.boden { position: absolute; left: -50%; right: -50%; bottom: -10%; height: 60%; z-index: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(0,170,255,.22) 1px, transparent 1px), linear-gradient(90deg, rgba(0,170,255,.22) 1px, transparent 1px);
+  background-size: 70px 70px; transform: perspective(500px) rotateX(72deg); transform-origin: center top;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 30%, #000 60%, transparent); mask-image: linear-gradient(to bottom, transparent, #000 30%, #000 60%, transparent);
+  animation: bodenLauf 3.2s linear infinite; opacity: .55; }
+@keyframes bodenLauf { to { background-position: 0 70px, 0 0; } }
+.hero-licht { position: absolute; left: 50%; top: 46%; width: 90vw; height: 60vh; transform: translate(-50%, -50%); pointer-events: none; z-index: 0;
+  background: radial-gradient(closest-side, rgba(0,120,255,.22), rgba(0,90,255,.06) 55%, transparent); }
+.hero-inhalt { position: relative; z-index: 2; width: 100%; display: flex; flex-direction: column; align-items: center; will-change: transform, opacity; }
+.buehne { perspective: 1200px; perspective-origin: 50% 50%; width: min(1000px, 96vw); }
+#logo3d { position: relative; width: 100%; aspect-ratio: 1000 / 460; transform-style: preserve-3d; will-change: transform; cursor: pointer; }
+#logo3d canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+#logoKabel { transform: translateZ(80px) scale(.9375); }   /* 1200/1280: gleicht die Vergrößerung durch translateZ aus */
+.slogan { font-family: var(--orbitron); font-weight: 700; letter-spacing: .55em; padding-left: .55em; font-size: clamp(12px, 2.4vw, 22px); margin: -1vw 0 0; display: flex; flex-wrap: wrap; justify-content: center; }
+.slogan span { display: inline-block; opacity: 0; transform: translateY(14px); filter: blur(6px); transition: opacity .7s, transform .9s var(--weich), filter .7s; }
+.slogan span.leer { width: .6em; }
+.da .slogan span, .slogan.da span { opacity: .92; transform: none; filter: none; }
+.hero-text { max-width: 560px; text-align: center; opacity: .66; margin: 16px 20px 0; font-size: clamp(16px, 2vw, 19px); }
+.hero-knoepfe { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-top: 30px; padding: 0 16px; }
+.hero-tipp { margin-top: 18px; font-size: 13px; letter-spacing: .12em; opacity: .38; }
+.hero-spaeter { opacity: 0; transform: translateY(20px); transition: opacity 1s .2s, transform 1.2s var(--weich) .2s; }
+.hero-spaeter.da { opacity: 1; transform: none; }
+.hero-spaeter.da.hero-text { opacity: .66; }
+.hero-spaeter.da.hero-tipp { opacity: .38; }
+.runter { position: absolute; bottom: calc(14px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); z-index: 3; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  font-family: var(--orbitron); font-size: 10px; letter-spacing: .35em; opacity: .5; text-decoration: none; }
+.runter i { width: 1px; height: 30px; background: linear-gradient(var(--blau), transparent); position: relative; overflow: hidden; }
+.runter i::after { content: ""; position: absolute; left: 0; right: 0; height: 14px; background: #fff; box-shadow: 0 0 8px #fff; animation: tropfen 1.8s var(--weich) infinite; }
+@keyframes tropfen { 0% { transform: translateY(-16px); } 100% { transform: translateY(52px); } }
+
+/* ============ Knöpfe ============ */
+.knopf { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 16px 28px; border-radius: 14px; border: 0; cursor: pointer;
+  text-decoration: none; color: #fff; font-family: var(--orbitron); font-size: 13px; font-weight: 700; letter-spacing: .16em; overflow: hidden; isolation: isolate;
+  transition: transform .4s var(--weich), box-shadow .3s; }
+.knopf.voll { background: linear-gradient(100deg, #0757c9, var(--blau)); box-shadow: 0 10px 34px rgba(0,120,255,.38), inset 0 1px 0 rgba(255,255,255,.25); }
+.knopf.voll::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.45) 50%, transparent 70%); transform: translateX(-120%); transition: transform .8s var(--weich); }
+.knopf.voll:hover::before { transform: translateX(120%); }
+.knopf.voll:hover { box-shadow: 0 14px 46px rgba(0,150,255,.6), inset 0 1px 0 rgba(255,255,255,.3); }
+.knopf.rand { background: rgba(255,255,255,.04); border: 1px solid rgba(140,200,255,.28); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.knopf.rand:hover { border-color: var(--blau); box-shadow: 0 0 28px rgba(0,170,255,.25), inset 0 0 18px rgba(0,170,255,.12); }
+.knopf .inner { display: inline-flex; gap: 10px; align-items: center; transition: transform .4s var(--weich); pointer-events: none; }
+
+/* ============ Abschnitte ============ */
+section { position: relative; padding: clamp(80px, 12vw, 150px) clamp(16px, 5vw, 60px); }
+.breit { max-width: 1200px; margin: 0 auto; }
+.etikett { font-family: var(--orbitron); font-size: 12px; letter-spacing: .4em; color: var(--blau); display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+.etikett::before { content: ""; width: 40px; height: 1px; background: var(--blau); box-shadow: 0 0 8px var(--blau); }
+.titel { font-family: var(--orbitron); font-weight: 900; font-size: clamp(34px, 6.4vw, 82px); line-height: 1.02; margin: 0 0 22px; letter-spacing: -.01em; }
+.titel .zeile { display: block; overflow: hidden; padding-bottom: .06em; }
+.titel .zeile > span { display: block; transform: translateY(105%) rotate(4deg); transform-origin: left bottom; transition: transform 1.1s var(--weich); }
+.titel.da .zeile > span { transform: none; }
+.titel.da .zeile:nth-child(2) > span { transition-delay: .1s; }
+.titel .leuchten { background: linear-gradient(90deg, #6fd3ff, var(--blau) 45%, #2f6bff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.untertitel { font-size: clamp(17px, 2vw, 21px); color: rgba(255,255,255,.68); max-width: 640px; margin: 0; }
+
+/* Allgemeines Reinfliegen beim Scrollen */
+[data-rein] { opacity: 0; transform: translateY(50px); transition: opacity 1s var(--weich), transform 1.2s var(--weich); transition-delay: var(--verz, 0s); }
+[data-rein].da { opacity: 1; transform: none; }
+[data-rein="links"] { transform: translateX(-70px); }
+[data-rein="rechts"] { transform: translateX(70px); }
+[data-rein="zoom"] { transform: scale(.85); }
+
+/* ============ Laufband ============ */
+.laufband { padding: clamp(40px, 7vw, 80px) 0; overflow: hidden; border-top: 1px solid var(--linie); border-bottom: 1px solid var(--linie); background: linear-gradient(180deg, transparent, rgba(0,100,255,.05), transparent); }
+.laufband .reihe { display: flex; white-space: nowrap; will-change: transform; font-family: var(--orbitron); font-weight: 900; font-size: clamp(46px, 10vw, 140px); line-height: 1.05; letter-spacing: .02em; }
+.laufband .reihe span { padding-right: .5em; }
+.laufband .hohl { color: transparent; -webkit-text-stroke: 1.5px rgba(140,205,255,.45); }
+.laufband .voll { color: #fff; text-shadow: 0 0 40px rgba(0,150,255,.35); }
+.laufband .blau { color: var(--blau); text-shadow: 0 0 40px rgba(0,170,255,.55); }
+
+/* ============ Zahlen ============ */
+.zahlen { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1px; background: var(--linie); border: 1px solid var(--linie); border-radius: 24px; overflow: hidden; margin-top: 50px; }
+.zahl { background: rgba(4,9,17,.92); padding: 34px 26px; position: relative; overflow: hidden; }
+.zahl::before { content: ""; position: absolute; inset: auto -40% -60% -40%; height: 120%; background: radial-gradient(closest-side, rgba(0,140,255,.18), transparent); opacity: 0; transition: opacity .5s; }
+.zahl:hover::before { opacity: 1; }
+.zahl b { display: block; font-family: var(--orbitron); font-weight: 900; font-size: clamp(42px, 5.5vw, 64px); line-height: 1; background: linear-gradient(180deg, #fff, #8ecfff); -webkit-background-clip: text; background-clip: text; color: transparent; position: relative; }
+.zahl span { display: block; margin-top: 10px; opacity: .6; font-size: 16px; position: relative; }
+
+/* ============ Spiele ============ */
+.spiele-kopf { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
+.filter { display: flex; gap: 6px; padding: 5px; border-radius: 14px; background: rgba(255,255,255,.04); border: 1px solid var(--linie); position: relative; }
+.filter button { position: relative; z-index: 1; background: none; border: 0; color: #fff; opacity: .6; font-family: var(--orbitron); font-size: 11px; letter-spacing: .18em; padding: 11px 16px; cursor: pointer; border-radius: 10px; transition: opacity .3s; }
+.filter button.an { opacity: 1; }
+.filter .schieber { position: absolute; z-index: 0; top: 5px; bottom: 5px; border-radius: 10px; background: linear-gradient(100deg, #0757c9, var(--blau)); box-shadow: 0 0 20px rgba(0,150,255,.45); transition: left .5s var(--weich), width .5s var(--weich); }
+.spiele-gitter { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 22px; margin-top: 46px; perspective: 1400px; }
+.karte-rein { opacity: 0; transform: translateY(90px) rotateX(-28deg) scale(.92); transform-origin: center top; transition: opacity .9s var(--weich), transform 1.2s var(--weich); transition-delay: var(--verz, 0s); }
+.karte-rein.da { opacity: 1; transform: none; }
+.karte-rein.versteckt { display: none; }
+.karte { --rx: 0deg; --ry: 0deg; --gx: 50%; --gy: 0%; position: relative; height: 100%; border-radius: 24px; padding: 1px; transform: perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry)); transition: transform .5s var(--weich); transform-style: preserve-3d; }
+.karte.fuehlt { transition: transform .08s linear; }
+.karte .rahmen { position: absolute; inset: 0; border-radius: 24px; background: linear-gradient(160deg, rgba(140,200,255,.28), rgba(140,200,255,.05) 40%, rgba(140,200,255,.12)); }
+@property --winkel { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+.karte .rahmen::after { content: ""; position: absolute; inset: 0; border-radius: 24px; opacity: 0; transition: opacity .4s;
+  background: conic-gradient(from var(--winkel), transparent 0deg, var(--blau) 40deg, #fff 60deg, var(--blau) 80deg, transparent 120deg, transparent 180deg, var(--blau-tief) 230deg, var(--blau) 260deg, transparent 300deg);
+  animation: drehen 3s linear infinite; }
+.karte:hover .rahmen::after { opacity: 1; }
+@keyframes drehen { to { --winkel: 360deg; } }
+.karte .koerper { position: relative; height: 100%; border-radius: 23px; background: linear-gradient(165deg, #0e1b31, #070d18 70%); padding: 24px; display: flex; flex-direction: column; overflow: hidden; }
+.karte .glanz { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .4s; background: radial-gradient(500px circle at var(--gx) var(--gy), rgba(120,200,255,.16), transparent 45%); }
+.karte:hover .glanz { opacity: 1; }
+.karte .oben { display: flex; gap: 16px; align-items: center; transform: translateZ(40px); }
+.karte .bild { width: 76px; height: 76px; border-radius: 20px; flex-shrink: 0; object-fit: cover; background: #0b1626; border: 1px solid rgba(255,255,255,.12); box-shadow: 0 12px 30px rgba(0,0,0,.5), 0 0 0 4px rgba(0,170,255,.06); display: flex; align-items: center; justify-content: center; font-size: 40px; transition: transform .6s var(--weich); }
+.karte:hover .bild { transform: scale(1.08) rotate(-4deg); }
+.karte h3 { font-family: var(--orbitron); font-size: 20px; margin: 0; letter-spacing: .02em; line-height: 1.2; }
+.schilder { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.schilder span { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 20px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); }
+.schilder .neu { background: linear-gradient(90deg, #ff3b4e, #ff8c42); border: 0; font-family: var(--orbitron); font-size: 10px; letter-spacing: .1em; padding-top: 4px; }
+.schilder .roblox { background: rgba(255,255,255,.92); color: #000; border: 0; }
+.karte p { opacity: .7; margin: 18px 0 22px; font-size: 17px; flex: 1; transform: translateZ(20px); }
+.karte .los { align-self: flex-start; transform: translateZ(30px); padding: 13px 22px; font-size: 12px; }
+.karte .nummer { position: absolute; right: 20px; bottom: 6px; font-family: var(--orbitron); font-weight: 900; font-size: 54px; color: transparent; -webkit-text-stroke: 1px rgba(140,200,255,.12); pointer-events: none; }
+
+/* ============ Community ============ */
+#community .breit { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(30px, 6vw, 80px); align-items: center; }
+.vorteile { list-style: none; padding: 0; margin: 30px 0 34px; display: grid; gap: 14px; }
+.vorteile li { display: flex; gap: 16px; align-items: flex-start; padding: 16px 18px; border-radius: 16px; background: rgba(255,255,255,.03); border: 1px solid var(--linie); }
+.vorteile li b { font-family: var(--orbitron); font-size: 14px; letter-spacing: .05em; display: block; margin-bottom: 2px; }
+.vorteile li span { opacity: .65; font-size: 16px; }
+.vorteile .icon { width: 42px; height: 42px; flex-shrink: 0; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 21px; background: linear-gradient(140deg, rgba(0,170,255,.25), rgba(10,92,255,.1)); border: 1px solid rgba(0,170,255,.35); }
+.orbit-buehne { position: relative; aspect-ratio: 1; width: 100%; max-width: 520px; margin: 0 auto; perspective: 1000px; }
+.orbit { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateX(68deg); }
+.ring { position: absolute; inset: 6%; border-radius: 50%; border: 1px solid rgba(0,170,255,.35); box-shadow: 0 0 30px rgba(0,170,255,.2), inset 0 0 30px rgba(0,170,255,.15); transform-style: preserve-3d; animation: ringDreh 26s linear infinite; }
+.ring.zwei { inset: 20%; border-style: dashed; border-color: rgba(140,210,255,.25); animation-duration: 40s; animation-direction: reverse; }
+@keyframes ringDreh { to { transform: rotateZ(360deg); } }
+.planet { position: absolute; left: 50%; top: 50%; width: 64px; height: 64px; margin: -32px; transform-style: preserve-3d; }
+.planet .gegen { width: 100%; height: 100%; animation: gegenDreh 26s linear infinite; transform-style: preserve-3d; }
+.planet img, .planet .emoji { width: 100%; height: 100%; border-radius: 16px; object-fit: cover; transform: rotateX(-68deg); box-shadow: 0 0 22px rgba(0,170,255,.45), 0 10px 20px rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.2); background: #0b1626; display: flex; align-items: center; justify-content: center; font-size: 34px; }
+@keyframes gegenDreh { to { transform: rotateZ(-360deg); } }
+.kern { position: absolute; left: 50%; top: 50%; width: 38%; aspect-ratio: 1; transform: translate(-50%, -62%); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle, rgba(0,140,255,.35), rgba(0,80,255,.08) 60%, transparent 70%); }
+.kern canvas { width: 100%; height: 100%; }
+.kern-schild { position: absolute; left: 50%; bottom: 7%; transform: translateX(-50%); font-family: var(--orbitron); font-weight: 900; letter-spacing: .3em; padding-left: .3em; font-size: clamp(14px, 2vw, 20px); white-space: nowrap; text-shadow: 0 0 20px rgba(0,170,255,.7); }
+
+/* ============ Neuigkeiten ============ */
+.zeitstrahl { position: relative; margin-top: 60px; }
+.zeitstrahl .spur { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: rgba(140,200,255,.1); }
+.zeitstrahl .spur i { position: absolute; inset: 0; transform-origin: top; transform: scaleY(0); background: linear-gradient(var(--blau), #b9ecff); box-shadow: 0 0 14px var(--blau); }
+.zeitstrahl .spur i::after { content: ""; position: absolute; left: 50%; bottom: -6px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: #fff; box-shadow: 0 0 16px 4px var(--blau); }
+.eintrag { position: relative; width: 50%; padding: 0 50px 54px 0; }
+.eintrag:nth-child(odd of .eintrag) { margin-left: 50%; padding: 0 0 54px 50px; }
+.eintrag::before { content: ""; position: absolute; top: 26px; right: -7px; width: 14px; height: 14px; border-radius: 50%; background: var(--dunkel); border: 2px solid var(--blau); box-shadow: 0 0 12px var(--blau); transition: background .4s; }
+.eintrag:nth-child(odd of .eintrag)::before { right: auto; left: -7px; }
+.eintrag.da::before { background: var(--blau); }
+.eintrag .kasten { padding: 24px 26px; border-radius: 20px; background: linear-gradient(160deg, rgba(16,30,54,.9), rgba(7,13,24,.9)); border: 1px solid var(--linie); transition: border-color .3s, transform .5s var(--weich); }
+.eintrag .kasten:hover { border-color: rgba(0,170,255,.5); transform: translateY(-4px); }
+.eintrag time { font-family: var(--orbitron); font-size: 12px; letter-spacing: .25em; color: var(--blau); }
+.eintrag h3 { font-family: var(--orbitron); font-size: clamp(18px, 2vw, 22px); margin: 8px 0 8px; }
+.eintrag p { margin: 0; opacity: .68; font-size: 17px; }
+.eintrag .schilder { margin-top: 12px; }
+
+/* ============ Über VORIX ============ */
+#ueber { min-height: 100vh; display: flex; align-items: center; }
+.scrub { font-family: var(--orbitron); font-weight: 700; font-size: clamp(24px, 4vw, 52px); line-height: 1.28; margin: 0; letter-spacing: -.005em; }
+.scrub .w { opacity: .12; transition: opacity .35s, color .35s, text-shadow .35s; }
+.scrub .w.an { opacity: 1; }
+.scrub .w.blau.an { color: var(--blau); text-shadow: 0 0 26px rgba(0,170,255,.55); }
+.unterschrift { margin-top: 40px; display: flex; align-items: center; gap: 16px; font-family: var(--orbitron); font-size: 13px; letter-spacing: .3em; opacity: .6; }
+.unterschrift svg { width: 34px; height: 34px; }
+
+/* ============ Infos ============ */
+.fragen { margin-top: 46px; display: grid; gap: 12px; }
+.frage { border-radius: 18px; background: rgba(255,255,255,.025); border: 1px solid var(--linie); overflow: hidden; transition: border-color .3s, background .3s; }
+.frage.offen { border-color: rgba(0,170,255,.45); background: rgba(0,120,255,.06); }
+.frage button { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 22px 24px; background: none; border: 0; color: #fff; text-align: left; cursor: pointer; font-family: var(--orbitron); font-size: clamp(15px, 1.8vw, 18px); font-weight: 700; letter-spacing: .02em; }
+.frage .plus { width: 30px; height: 30px; flex-shrink: 0; border-radius: 50%; border: 1px solid rgba(140,200,255,.35); position: relative; transition: transform .5s var(--weich), background .3s; }
+.frage .plus::before, .frage .plus::after { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 2px; margin: -1px -6px; background: #fff; }
+.frage .plus::after { transform: rotate(90deg); transition: transform .5s var(--weich); }
+.frage.offen .plus { transform: rotate(180deg); background: var(--blau); border-color: var(--blau); }
+.frage.offen .plus::after { transform: rotate(0deg); }
+.frage .antwort { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .6s var(--weich); }
+.frage.offen .antwort { grid-template-rows: 1fr; }
+.frage .antwort > div { overflow: hidden; }
+.frage .antwort p { margin: 0; padding: 0 24px 22px; opacity: .72; font-size: 17px; }
+.frage .antwort a { color: var(--hell); font-weight: 700; }
+
+/* ============ Schluss ============ */
+.schluss { text-align: center; padding-bottom: 60px; }
+.schluss .titel { margin-bottom: 30px; }
+.schluss .hero-knoepfe { margin-top: 10px; }
+footer { border-top: 1px solid var(--linie); padding: 34px clamp(16px, 5vw, 60px) calc(34px + env(safe-area-inset-bottom)); display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; font-size: 14px; }
+footer .links { display: flex; gap: 22px; flex-wrap: wrap; }
+footer .links a { opacity: .6; text-decoration: none; transition: opacity .2s; }
+footer .links a:hover { opacity: 1; color: var(--hell); }
+footer small { opacity: .4; letter-spacing: .05em; }
+
+/* ============ Extras (22.11.2026): Funken, Kabel-Sturm, Kabel-Farbe ============ */
+:root { --kabel: #00aaff; --kabel-hell: #a9d3ff; }
+#funken { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 95; pointer-events: none; }
+
+#sturmText { position: fixed; left: 50%; top: 50%; z-index: 96; pointer-events: none; transform: translate(-50%, -50%) scale(.6); opacity: 0; font-family: var(--orbitron); font-weight: 900; font-size: clamp(24px, 6.5vw, 86px); letter-spacing: .1em; white-space: nowrap; color: #fff; text-shadow: 0 0 30px var(--kabel), 0 0 80px var(--kabel); }
+#sturmText.an { animation: sturmText 3.4s var(--weich) forwards; }
+@keyframes sturmText { 0% { opacity: 0; transform: translate(-50%, -50%) scale(.5); } 12% { opacity: 1; transform: translate(-50%, -50%) scale(1.06); } 22% { transform: translate(-50%, -50%) scale(1); } 75% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.25); } }
+main.beben { animation: beben .45s linear 4; }
+@keyframes beben { 0%, 100% { transform: none; } 20% { transform: translate(-5px, 3px); } 40% { transform: translate(4px, -4px); } 60% { transform: translate(-3px, -2px); } 80% { transform: translate(4px, 3px); } }
+.hero-leiste { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px 34px; margin-top: 18px; padding: 0 16px; }
+.hero-leiste .hero-tipp { margin-top: 0; }
+.farbwahl { display: flex; align-items: center; gap: 12px; font-family: var(--orbitron); font-size: 10px; letter-spacing: .3em; }
+.farbwahl span { opacity: .45; }
+.farbwahl button { width: 26px; height: 26px; padding: 0; border-radius: 50%; border: 2px solid rgba(255,255,255,.25); background: radial-gradient(circle at 35% 30%, #fff, var(--f) 45%); box-shadow: 0 0 12px var(--f); cursor: pointer; transition: transform .3s var(--weich), box-shadow .3s, border-color .3s; }
+.farbwahl button:hover { transform: scale(1.2); }
+.farbwahl button.an { border-color: #fff; transform: scale(1.25); box-shadow: 0 0 22px 3px var(--f); }
+
+/* ============ Geheime Karte „Bald bei VORIX“ ============ */
+.karte.geheim .koerper { background: repeating-linear-gradient(135deg, rgba(255,255,255,.028) 0 12px, transparent 12px 24px), linear-gradient(165deg, #0e1b31, #070d18 70%); }
+.karte.geheim .rahmen { background: none; border: 1.5px dashed rgba(140,200,255,.38); }
+.karte .schloss { background: linear-gradient(160deg, #13233f, #0a1220); cursor: pointer; }
+.karte h3.wirr { display: inline-block; min-width: 8.5em; letter-spacing: .14em; white-space: nowrap; color: var(--kabel-hell); text-shadow: 0 0 14px var(--kabel); }
+.schilder .bald { background: linear-gradient(90deg, #7a3cff, #00aaff); border: 0; font-family: var(--orbitron); font-size: 10px; letter-spacing: .1em; padding-top: 4px; }
+.schloss.wackel { animation: wackel .5s; }
+@keyframes wackel { 0%, 100% { transform: rotate(0); } 20% { transform: rotate(-16deg); } 40% { transform: rotate(13deg); } 60% { transform: rotate(-9deg); } 80% { transform: rotate(6deg); } }
+
+/* ============ So entsteht ein VORIX-Spiel ============ */
+.ablauf { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 60px; }
+.ablauf-kabel { position: absolute; left: 6%; right: 6%; top: 38px; height: 3px; background: rgba(140,200,255,.12); border-radius: 3px; }
+.ablauf-kabel i { position: absolute; inset: 0; border-radius: 3px; transform-origin: left; transform: scaleX(0); background: linear-gradient(90deg, var(--blau-tief), var(--blau), #dff6ff); box-shadow: 0 0 14px var(--blau); transition: transform 1.9s cubic-bezier(.4,0,.2,1) .3s; }
+.ablauf.da .ablauf-kabel i { transform: scaleX(1); }
+.ablauf-kabel b { position: absolute; top: -4px; left: 0; width: 60px; height: 11px; border-radius: 11px; background: radial-gradient(closest-side, #fff, rgba(0,170,255,.6) 50%, transparent); opacity: 0; }
+.ablauf.da .ablauf-kabel b { animation: ablaufPuls 2.6s linear 2.3s infinite; }
+@keyframes ablaufPuls { 0% { left: -4%; opacity: 0; } 8% { opacity: 1; } 92% { opacity: 1; } 100% { left: 100%; opacity: 0; } }
+.schritt { position: relative; text-align: center; opacity: 0; transform: translateY(40px) scale(.9); transition: opacity .8s var(--weich), transform 1s var(--weich); transition-delay: calc(.35s + var(--n) * .42s); }
+.ablauf.da .schritt { opacity: 1; transform: none; }
+.schritt-icon { width: 78px; height: 78px; margin: 0 auto 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 34px; background: radial-gradient(circle at 35% 30%, #16305a, #08111f 70%); border: 1px solid rgba(0,170,255,.5); box-shadow: 0 0 0 6px var(--dunkel), 0 0 30px rgba(0,170,255,.35); position: relative; animation: schweben 3.6s ease-in-out infinite; animation-delay: calc(var(--n) * -.9s); }
+@keyframes schweben { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.schritt small { font-family: var(--orbitron); font-size: 10px; letter-spacing: .3em; color: var(--blau); }
+.schritt h3 { font-family: var(--orbitron); font-size: 20px; letter-spacing: .08em; margin: 6px 0 8px; }
+.schritt p { margin: 0 auto; max-width: 250px; color: rgba(255,255,255,.66); font-size: 16.5px; }
+@media (max-width: 860px) {
+  .ablauf { grid-template-columns: 1fr; gap: 34px; }
+  .ablauf-kabel { left: 50%; right: auto; top: 20px; bottom: 20px; width: 3px; height: auto; margin-left: -1.5px; }
+  .ablauf-kabel i { transform-origin: top; transform: scaleY(0); }
+  .ablauf.da .ablauf-kabel i { transform: scaleY(1); }
+  .ablauf-kabel b { display: none; }
+  .schritt { background: var(--dunkel); padding: 6px 0; }
+}
+
+/* ============ Mitmachen: Mini-Challenge und Quiz ============ */
+.mitmach-gitter { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 46px; align-items: stretch; }
+.kasten-gross { position: relative; border-radius: 24px; padding: clamp(22px, 3vw, 34px); background: linear-gradient(165deg, #0e1b31, #070d18 70%); border: 1px solid var(--linie); overflow: hidden; display: flex; flex-direction: column; }
+.kasten-gross::before { content: ""; position: absolute; left: -20%; right: -20%; top: -60%; height: 100%; background: radial-gradient(closest-side, rgba(0,140,255,.16), transparent); pointer-events: none; }
+.kg-kopf { display: flex; gap: 16px; align-items: center; position: relative; }
+.kg-icon { width: 54px; height: 54px; flex-shrink: 0; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 27px; background: linear-gradient(140deg, rgba(0,170,255,.25), rgba(10,92,255,.1)); border: 1px solid rgba(0,170,255,.35); }
+.kg-kopf h3 { font-family: var(--orbitron); font-size: 18px; letter-spacing: .12em; margin: 0; }
+.kg-kopf p { margin: 2px 0 0; color: rgba(255,255,255,.65); font-size: 17px; }
+.kg-kopf p b { color: #fff; }
+.kg-knoepfe { display: flex; gap: 12px; flex-wrap: wrap; position: relative; }
+.uhr { font-family: var(--orbitron); font-weight: 900; font-size: clamp(56px, 9.5vw, 116px); line-height: 1; text-align: center; margin: 30px 0 10px; position: relative; white-space: nowrap; transition: color .3s, text-shadow .3s, transform .4s var(--weich); text-shadow: 0 0 30px rgba(0,150,255,.35); }
+.uhr .ziffer { display: inline-block; width: .84em; text-align: center; }
+.uhr .komma { display: inline-block; width: .34em; text-align: center; }
+.uhr.laeuft { color: #dff4ff; text-shadow: 0 0 40px rgba(0,170,255,.7); }
+.uhr.perfekt { color: #ffe27a; text-shadow: 0 0 50px #ffb81f; transform: scale(1.1); }
+.uhr.super { color: #7dffb0; text-shadow: 0 0 44px #22e06a; transform: scale(1.06); }
+.uhr.gut { color: #8fdcff; text-shadow: 0 0 40px #00aaff; }
+.uhr.daneben { color: #ff8c9c; text-shadow: 0 0 34px rgba(255,60,90,.6); }
+.uhr-text { text-align: center; min-height: 2.9em; color: rgba(255,255,255,.75); margin-bottom: 18px; position: relative; }
+#miniTimer .kg-knoepfe { justify-content: center; }
+#uhrKnopf { min-width: 170px; touch-action: manipulation; }
+.uhr-best { text-align: center; font-size: 15px; color: var(--hell); opacity: .8; margin-top: 14px; min-height: 1.4em; position: relative; }
+.quiz-punkte { display: flex; gap: 8px; margin: 24px 0 18px; position: relative; }
+.quiz-punkte i { height: 4px; flex: 1; border-radius: 4px; background: rgba(255,255,255,.1); transition: background .4s, box-shadow .4s; }
+.quiz-punkte i.jetzt { background: rgba(0,170,255,.5); }
+.quiz-punkte i.voll { background: var(--blau); box-shadow: 0 0 10px var(--blau); }
+.quiz-feld { position: relative; flex: 1; transition: opacity .25s, transform .35s var(--weich); }
+.quiz-feld.raus { opacity: 0; transform: translateX(-26px); }
+.quiz-frage { font-family: var(--orbitron); font-weight: 700; font-size: clamp(19px, 2.2vw, 25px); margin-bottom: 16px; }
+.quiz-antworten { display: grid; gap: 10px; }
+.quiz-antwort { text-align: left; padding: 15px 18px; border-radius: 14px; background: rgba(255,255,255,.04); border: 1px solid rgba(140,200,255,.2); color: #fff; font-family: var(--rajdhani); font-size: 18px; font-weight: 600; cursor: pointer; transition: background .25s, border-color .25s, transform .35s var(--weich); animation: quizRein .55s var(--weich) backwards; animation-delay: var(--verz, 0s); }
+.quiz-antwort:hover { background: rgba(0,150,255,.14); border-color: var(--blau); transform: translateX(6px); }
+@keyframes quizRein { from { opacity: 0; transform: translateY(16px); } }
+.quiz-klein { font-family: var(--orbitron); font-size: 12px; letter-spacing: .35em; color: var(--blau); }
+.quiz-sieger { display: flex; align-items: center; gap: 16px; margin: 14px 0 10px; animation: quizRein .7s var(--weich) backwards; }
+.quiz-sieger .bild { width: 72px; height: 72px; border-radius: 18px; object-fit: cover; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 38px; border: 1px solid rgba(255,255,255,.15); box-shadow: 0 0 26px rgba(0,170,255,.45); background: #0b1626; }
+.quiz-sieger h4 { font-family: var(--orbitron); font-size: clamp(20px, 2.4vw, 28px); margin: 0; }
+.quiz-ergebnis p { color: rgba(255,255,255,.7); margin: 0 0 20px; }
+@media (max-width: 860px) { .mitmach-gitter { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) {
+  .schritt-icon, .ablauf.da .ablauf-kabel b, .quiz-antwort, .quiz-sieger, #sturmText.an, main.beben, .schloss.wackel { animation: none !important; }
+  .schritt { transition: none !important; opacity: 1 !important; transform: none !important; }
+}
+
+/* ============ Maus-Licht ============ */
+.zeiger { position: fixed; left: 0; top: 0; z-index: 90; pointer-events: none; width: 34px; height: 34px; margin: -17px; border-radius: 50%; border: 1px solid rgba(120,200,255,.6);
+  box-shadow: 0 0 18px rgba(0,170,255,.35); transition: width .35s var(--weich), height .35s var(--weich), margin .35s var(--weich), background .35s, opacity .3s; opacity: 0; }
+.zeiger.sichtbar { opacity: 1; }
+.zeiger.gross { width: 70px; height: 70px; margin: -35px; background: rgba(0,170,255,.1); }
+
+@media (min-width: 861px) { .eintrag + .eintrag { margin-top: -110px; } }
+
+/* ============ Handy ============ */
+@media (max-width: 860px) {
+  #community .breit { grid-template-columns: 1fr; }
+  .orbit-buehne { max-width: 400px; order: -1; }
+  .zeitstrahl .spur { left: 8px; }
+  .eintrag, .eintrag:nth-child(odd of .eintrag) { width: 100%; margin-left: 0; padding: 0 0 36px 40px; }
+  .eintrag::before, .eintrag:nth-child(odd of .eintrag)::before { left: 1px; right: auto; }
+  .navlinks a { font-size: 10px; letter-spacing: .12em; }
+}
+@media (max-width: 480px) { nav .marke > span { display: none; } }
+@media (max-width: 560px) {
+  .karte .koerper { padding: 20px; }
+  .zahl { padding: 26px 20px; }
+}
+
+/* Wer weniger Bewegung eingestellt hat, bekommt eine ruhige Seite */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .boden, .ring, .planet .gegen, .runter i::after, .karte .rahmen::after { animation: none; }
+  [data-rein], .karte-rein, .titel .zeile > span, .slogan span, .hero-spaeter { transition: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
+}
+</style>
+</head>
+
+<body class="laedt">
+
+<!-- Lade-Bildschirm -->
+<div id="lader" aria-hidden="true">
+  <div class="tuer oben"></div><div class="tuer unten"></div>
+  <div class="lader-inhalt">
+    <div class="lader-wort">VORIX <span>HQ</span></div>
+    <div class="lader-balken"><i></i></div>
+    <div class="lader-zahl">000</div>
+  </div>
+</div>
+
+<canvas id="hintergrund" aria-hidden="true"></canvas>
+<div id="fortschritt"></div>
+<div class="zeiger" aria-hidden="true"></div>
+<canvas id="funken" aria-hidden="true"></canvas>
+<div id="sturmText" aria-hidden="true">⚡ KABEL-STURM ⚡</div>
+
+<nav id="nav">
+  <a class="marke" href="#hero" aria-label="VORIX HQ – nach oben">
+    <svg viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="mg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#0a5cff"/><stop offset="1" stop-color="#7fe0ff"/></linearGradient></defs>
+      <path d="M3 8 H14 Q18 8 21 12 L32 31 Q33.5 33 37 33" fill="none" stroke="url(#mg)" stroke-width="3.4" stroke-linecap="round"/>
+      <path d="M5 37 L36 3" fill="none" stroke="url(#mg)" stroke-width="3.4" stroke-linecap="round"/></svg>
+    <span>VORIX <b>HQ</b></span>
+  </a>
+  <div class="navlinks">
+    <a href="#spiele">SPIELE</a>
+    <a href="#mitmachen">MITMACHEN</a>
+    <a href="#community">COMMUNITY</a>
+    <a href="#news">NEWS</a>
+    <a href="#ueber">ÜBER</a>
+    <a href="#infos">INFOS</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ HERO ============ -->
+<header id="hero">
+  <div class="boden" aria-hidden="true"></div>
+  <div class="hero-licht" aria-hidden="true"></div>
+  <div class="hero-inhalt" id="heroInhalt">
+    <div class="buehne">
+      <div id="logo3d" role="img" aria-label="VORIX – das X besteht aus leuchtenden Kabeln">
+        <canvas id="logoText"></canvas>
+        <canvas id="logoKabel"></canvas>
+      </div>
+    </div>
+    <div class="slogan" id="slogan" aria-label="WE CREATE GAMES"></div>
+    <p class="hero-text hero-spaeter">Willkommen in der Zentrale. Hier findest du alle VORIX-Spiele, die Community, die neuesten Updates und alles, was du wissen musst.</p>
+    <div class="hero-knoepfe hero-spaeter">
+      <a class="knopf voll magnet" href="#spiele"><span class="inner">▶ ALLE SPIELE</span></a>
+      <a class="knopf rand magnet" href="#community"><span class="inner">COMMUNITY</span></a>
+    </div>
+    <div class="hero-leiste hero-spaeter">
+      <div class="hero-tipp" id="heroTipp">✦ Fahr mit der Maus durch die Kabel · Klick aufs X</div>
+      <div class="farbwahl" id="farbwahl" role="group" aria-label="Kabel-Farbe wählen"><span>KABEL-FARBE</span></div>
+    </div>
+  </div>
+  <a class="runter" href="#zahlen-bereich"><i></i>SCROLL</a>
+</header>
+
+<!-- ============ LAUFBAND ============ -->
+<div class="laufband" id="laufband" aria-hidden="true">
+  <div class="reihe" data-richtung="-1"><span class="hohl">WE CREATE GAMES</span><span class="blau">✦</span><span class="voll">VORIX HQ</span><span class="blau">✦</span><span class="hohl">WE CREATE GAMES</span><span class="blau">✦</span><span class="voll">VORIX HQ</span><span class="blau">✦</span></div>
+  <div class="reihe" data-richtung="1"><span class="voll">BROWSER</span><span class="blau">✦</span><span class="hohl">ROBLOX</span><span class="blau">✦</span><span class="voll">KOSTENLOS</span><span class="blau">✦</span><span class="hohl">BROWSER</span><span class="blau">✦</span><span class="voll">ROBLOX</span><span class="blau">✦</span><span class="hohl">KOSTENLOS</span></div>
+</div>
+
+<!-- ============ ZAHLEN ============ -->
+<section id="zahlen-bereich">
+  <div class="breit">
+    <div class="etikett" data-rein>VORIX IN ZAHLEN</div>
+    <h2 class="titel" data-titel><span class="zeile"><span>Ein Studio.</span></span><span class="zeile"><span class="leuchten">Viele Welten.</span></span></h2>
+    <p class="untertitel" data-rein style="--verz:.15s">Von der Hundertstelsekunde bis zum Autorennen durch eine ganze Stadt.</p>
+    <div class="zahlen">
+      <div class="zahl" data-rein style="--verz:.0s"><b data-zahl="8">0</b><span>Spiele</span></div>
+      <div class="zahl" data-rein style="--verz:.08s"><b data-zahl="5">0</b><span>direkt im Browser</span></div>
+      <div class="zahl" data-rein style="--verz:.16s"><b data-zahl="3">0</b><span>auf Roblox</span></div>
+      <div class="zahl" data-rein style="--verz:.24s"><b data-zahl="235">0</b><span>Automodelle kennt die Spotter-KI</span></div>
+      <div class="zahl" data-rein style="--verz:.32s"><b data-zahl="0" data-nach=" €">0 €</b><span>kostet das Spielen</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SPIELE ============ -->
+<section id="spiele">
+  <div class="breit">
+    <div class="spiele-kopf">
+      <div>
+        <div class="etikett" data-rein>01 — SPIELE</div>
+        <h2 class="titel" data-titel><span class="zeile"><span>Alle</span></span><span class="zeile"><span class="leuchten">VORIX-Spiele</span></span></h2>
+      </div>
+      <div class="filter" id="filter" data-rein>
+        <span class="schieber"></span>
+        <button class="an" data-filter="alle">ALLE</button>
+        <button data-filter="browser">BROWSER</button>
+        <button data-filter="roblox">ROBLOX</button>
+      </div>
+    </div>
+
+    <div class="spiele-gitter" id="spieleGitter"><!-- wird unten aus der Liste SPIELE gebaut --></div>
+  </div>
+</section>
+
+<!-- ============ MITMACHEN: Mini-Challenge und Quiz ============ -->
+<section id="mitmachen">
+  <div class="breit">
+    <div class="etikett" data-rein>02 — MITMACHEN</div>
+    <h2 class="titel" data-titel><span class="zeile"><span>Jetzt bist</span></span><span class="zeile"><span class="leuchten">du dran</span></span></h2>
+    <div class="mitmach-gitter">
+
+      <div class="kasten-gross" data-rein="links" id="miniTimer">
+        <div class="kg-kopf"><span class="kg-icon">🎯</span><div><h3>MINI-CHALLENGE</h3><p>Stoppe den Timer genau bei <b>5,00</b> Sekunden.</p></div></div>
+        <div class="uhr" id="uhr" aria-hidden="true"></div>
+        <div class="uhr-text" id="uhrText" aria-live="polite">Drück START und dann im richtigen Moment STOPP.</div>
+        <div class="kg-knoepfe">
+          <button class="knopf voll" id="uhrKnopf" type="button"><span class="inner">▶ START</span></button>
+          <a class="knopf rand" href="https://ibralox37.github.io/Timer-/" target="_blank" rel="noopener"><span class="inner">DAS ECHTE SPIEL ↗</span></a>
+        </div>
+        <div class="uhr-best" id="uhrBest"></div>
+      </div>
+
+      <div class="kasten-gross" data-rein="rechts" id="quiz">
+        <div class="kg-kopf"><span class="kg-icon">❓</span><div><h3>QUIZ</h3><p>Welches VORIX-Spiel passt zu dir?</p></div></div>
+        <div class="quiz-punkte" id="quizPunkte" aria-hidden="true"></div>
+        <div class="quiz-feld" id="quizFeld"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMMUNITY ============ -->
+<section id="community">
+  <div class="breit">
+    <div>
+      <div class="etikett" data-rein>03 — COMMUNITY</div>
+      <h2 class="titel" data-titel><span class="zeile"><span>Werde Teil</span></span><span class="zeile"><span class="leuchten">von VORIX HQ</span></span></h2>
+      <p class="untertitel" data-rein style="--verz:.1s">VORIX HQ ist die offizielle VORIX-Community auf Roblox. Jeder darf beitreten.</p>
+      <ul class="vorteile">
+        <li data-rein style="--verz:.1s"><div class="icon">🥞</div><div><b>5 GRATIS-SKIPS</b><span>Mitglieder bekommen in Pancake Obby 5 Skips geschenkt.</span></div></li>
+        <li data-rein style="--verz:.2s"><div class="icon">🏎️</div><div><b>NITRO CITY</b><span>Das Autorennen gehört der Community VORIX HQ.</span></div></li>
+        <li data-rein style="--verz:.3s"><div class="icon">✦</div><div><b>KOSTENLOS</b><span>Beitreten kostet nichts. Du brauchst nur dein Roblox-Konto.</span></div></li>
+      </ul>
+      <a class="knopf voll magnet" data-rein style="--verz:.35s" href="https://www.roblox.com/communities/373587531/VORIX-HQ" target="_blank" rel="noopener"><span class="inner">COMMUNITY BEITRETEN ↗</span></a>
+    </div>
+    <div class="orbit-buehne" data-rein="zoom" aria-hidden="true">
+      <div class="kern"><canvas id="kernX"></canvas></div>
+      <div class="orbit" id="orbit">
+        <div class="ring"></div>
+        <div class="ring zwei"></div>
+      </div>
+      <div class="kern-schild">VORIX HQ</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NEWS ============ -->
+<section id="news">
+  <div class="breit">
+    <div class="etikett" data-rein>04 — NEUIGKEITEN</div>
+    <h2 class="titel" data-titel><span class="zeile"><span>Was gerade</span></span><span class="zeile"><span class="leuchten">passiert</span></span></h2>
+    <div class="zeitstrahl" id="zeitstrahl">
+      <div class="spur"><i id="spurVoll"></i></div>
+
+      <article class="eintrag" data-rein="links"><div class="kasten">
+        <time>15.11.2026</time><h3>🏎️ Nitro City ist online</h3>
+        <p>Rase mit Sportwagen gegen die Zeit durch eine Stadt. Seit Version 1.7 mit Verkehr, Tag und Nacht, Drift, Geister-Auto, Blitzern und Tages-Aufgaben.</p>
+        <div class="schilder"><span class="neu">NEU</span><span class="roblox">Roblox</span></div>
+      </div></article>
+
+      <article class="eintrag" data-rein="rechts"><div class="kasten">
+        <time>24.10.2026</time><h3>✦ Die Community VORIX HQ ist da</h3>
+        <p>Die offizielle VORIX-Community auf Roblox. Wer beitritt, bekommt in Pancake Obby 5 Gratis-Skips.</p>
+        <div class="schilder"><span class="roblox">Roblox</span><span>Community</span></div>
+      </div></article>
+
+      <article class="eintrag" data-rein="links"><div class="kasten">
+        <time>24.10.2026</time><h3>⚽ Knee Slide Legends 4.0</h3>
+        <p>Das große Update bringt Tages-Aufgaben. Seit Version 3.6 steht außerdem ein echter Torwart im Tor, der auch mal hält.</p>
+        <div class="schilder"><span class="roblox">Roblox</span><span>Update</span></div>
+      </div></article>
+
+      <article class="eintrag" data-rein="rechts"><div class="kasten">
+        <time>11.10.2026</time><h3>⚽ Knee Slide Legends startet</h3>
+        <p>Schieß ein Tor, rutsch auf den Knien zur Legende und bau deinen vermüllten Bolzplatz zum Stadion aus.</p>
+        <div class="schilder"><span class="roblox">Roblox</span><span>Fußball</span></div>
+      </div></article>
+
+      <article class="eintrag" data-rein="links"><div class="kasten">
+        <time>08.10.2026</time><h3>👤 Konto oder Gast</h3>
+        <p>Jump over the Wall, Vorix Stack, Vorix Loop und Vorix Spotter fragen jetzt am Anfang: Anmelden, neues Konto oder als Gast spielen.</p>
+        <div class="schilder"><span>Browser</span><span>Vorix-Konto</span></div>
+      </div></article>
+
+      <article class="eintrag" data-rein="rechts"><div class="kasten">
+        <time>07.10.2026</time><h3>🚀 Drei Spiele an einem Tag</h3>
+        <p>Jump over the Wall, Vorix Stack und Vorix Loop gehen online. Dazu kommt die VORIX-App mit allen Spielen, QR-Codes und Teilen-Knopf.</p>
+        <div class="schilder"><span>Browser</span><span>App</span></div>
+      </div></article>
+
+      <article class="eintrag" data-rein="links"><div class="kasten">
+        <time>07.10.2026</time><h3>📸 Vorix Spotter ist online</h3>
+        <p>Fotografiere echte Autos und die KI erkennt sie, sogar das genaue Modell. Sammle Sticker für dein Album.</p>
+        <div class="schilder"><span>Handy</span><span>KI</span></div>
+      </div></article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SO ENTSTEHT EIN VORIX-SPIEL ============ -->
+<section id="ablauf">
+  <div class="breit">
+    <div class="etikett" data-rein>05 — HINTER DEN KULISSEN</div>
+    <h2 class="titel" data-titel><span class="zeile"><span>So entsteht</span></span><span class="zeile"><span class="leuchten">ein VORIX-Spiel</span></span></h2>
+    <div class="ablauf" data-rein>
+      <div class="ablauf-kabel" aria-hidden="true"><i></i><b></b></div>
+      <div class="schritt" style="--n:0"><div class="schritt-icon">💡</div><small>SCHRITT 1</small><h3>IDEE</h3><p>Am Anfang steht eine Idee. Zum Beispiel: nach dem Tor auf den Knien über den Rasen rutschen.</p></div>
+      <div class="schritt" style="--n:1"><div class="schritt-icon">🛠️</div><small>SCHRITT 2</small><h3>BAUEN</h3><p>Dann wird gebaut, Stück für Stück: Level, Figuren, Knöpfe und Regeln.</p></div>
+      <div class="schritt" style="--n:2"><div class="schritt-icon">🧪</div><small>SCHRITT 3</small><h3>TESTEN</h3><p>Jedes Spiel wird getestet und verbessert, bis alles passt.</p></div>
+      <div class="schritt" style="--n:3"><div class="schritt-icon">🚀</div><small>SCHRITT 4</small><h3>ONLINE</h3><p>Ist es fertig, geht es online. Kostenlos für alle.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ÜBER ============ -->
+<section id="ueber">
+  <div class="breit">
+    <div class="etikett" data-rein>06 — ÜBER VORIX</div>
+    <p class="scrub" id="scrub">VORIX ist das Spiele-Studio von Ibralox37. Hier entstehen Spiele für den *Browser* und für *Roblox*, von der Timer-Challange bis zum Autorennen durch eine ganze Stadt. Jedes Spiel ist *kostenlos* spielbar. Und das ist erst der *Anfang.*</p>
+    <div class="unterschrift" data-rein>
+      <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M3 8 H14 Q18 8 21 12 L32 31 Q33.5 33 37 33" fill="none" stroke="#00aaff" stroke-width="3" stroke-linecap="round"/><path d="M5 37 L36 3" fill="none" stroke="#7fe0ff" stroke-width="3" stroke-linecap="round"/></svg>
+      VORIX – WE CREATE GAMES
+    </div>
+  </div>
+</section>
+
+<!-- ============ INFOS ============ -->
+<section id="infos">
+  <div class="breit">
+    <div class="etikett" data-rein>07 — INFOS</div>
+    <h2 class="titel" data-titel><span class="zeile"><span>Gut zu</span></span><span class="zeile"><span class="leuchten">wissen</span></span></h2>
+    <div class="fragen">
+      <div class="frage" data-rein><button aria-expanded="false">Was kostet das?<span class="plus"></span></button>
+        <div class="antwort"><div><p>Alle VORIX-Spiele kannst du kostenlos spielen. Die Browser-Spiele laufen einfach im Browser, auf dem PC und auf dem Handy.</p></div></div></div>
+      <div class="frage" data-rein style="--verz:.05s"><button aria-expanded="false">Was ist das Vorix-Konto?<span class="plus"></span></button>
+        <div class="antwort"><div><p>Ein Konto für alle Browser-Spiele. Du erstellst es in <a href="https://ibralox37.github.io/Timer-/" target="_blank" rel="noopener">Timer-Challange</a>. Mit demselben Namen und Passwort meldest du dich auch in Vorix Spotter, Jump over the Wall, Vorix Stack und Vorix Loop an. Du kannst aber auch einfach als Gast spielen.</p></div></div></div>
+      <div class="frage" data-rein style="--verz:.1s"><button aria-expanded="false">Brauche ich Roblox?<span class="plus"></span></button>
+        <div class="antwort"><div><p>Nur für Pancake Obby, Knee Slide Legends und Nitro City. Die anderen fünf Spiele brauchen nichts außer einem Browser.</p></div></div></div>
+      <div class="frage" data-rein style="--verz:.15s"><button aria-expanded="false">Kann ich VORIX aufs Handy holen?<span class="plus"></span></button>
+        <div class="antwort"><div><p>Ja, mit der <a href="https://ibralox37.github.io/" target="_blank" rel="noopener">VORIX-App</a>. iPhone: in Safari auf „Teilen“ und dann „Zum Home-Bildschirm“. Android: in Chrome auf ⋮ und dann „App installieren“.</p></div></div></div>
+      <div class="frage" data-rein style="--verz:.2s"><button aria-expanded="false">Wie zeige ich ein Spiel meinen Freunden?<span class="plus"></span></button>
+        <div class="antwort"><div><p>In der <a href="https://ibralox37.github.io/" target="_blank" rel="noopener">VORIX-App</a> hat jedes Spiel einen QR-Code und einen Teilen-Knopf. QR-Code antippen, dann wird er groß, und deine Freunde scannen ihn mit der Handy-Kamera.</p></div></div></div>
+      <div class="frage" data-rein style="--verz:.25s"><button aria-expanded="false">Gibt es ein Geheimnis auf dieser Seite?<span class="plus"></span></button>
+        <div class="antwort"><div><p>Ja. Tipp auf der Tastatur das Wort VORIX. Am Handy: fünfmal schnell hintereinander aufs große X tippen. Mehr wird nicht verraten.</p></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCHLUSS ============ -->
+<section class="schluss">
+  <div class="breit">
+    <h2 class="titel" data-titel><span class="zeile"><span>Bereit zum</span></span><span class="zeile"><span class="leuchten">Spielen?</span></span></h2>
+    <div class="hero-knoepfe">
+      <a class="knopf voll magnet" href="https://ibralox37.github.io/" target="_blank" rel="noopener"><span class="inner">🎮 ZUR VORIX-APP ↗</span></a>
+      <a class="knopf rand magnet" href="#spiele"><span class="inner">SPIELE ANSEHEN</span></a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <a class="marke" href="#hero"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M3 8 H14 Q18 8 21 12 L32 31 Q33.5 33 37 33" fill="none" stroke="#00aaff" stroke-width="3.4" stroke-linecap="round"/><path d="M5 37 L36 3" fill="none" stroke="#7fe0ff" stroke-width="3.4" stroke-linecap="round"/></svg><span>VORIX <b>HQ</b></span></a>
+  <div class="links">
+    <a href="https://ibralox37.github.io/" target="_blank" rel="noopener">VORIX-App</a>
+    <a href="https://www.roblox.com/communities/373587531/VORIX-HQ" target="_blank" rel="noopener">Community</a>
+    <a href="#spiele">Spiele</a>
+    <a href="#infos">Infos</a>
+  </div>
+  <small>© 2026 Ibralox37 / VORIX – WE CREATE GAMES</small>
+</footer>
+
+<script>
+'use strict';
+/* =====================================================================
+   VORIX HQ – Animationen
+   ===================================================================== */
+const RUHIG = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const FEINE_MAUS = matchMedia('(pointer: fine)').matches;
+const HANDY = innerWidth < 700;
+const maus = { x: innerWidth / 2, y: innerHeight / 2, nx: 0, ny: 0, bewegt: false };
+const klemm = (v, a = 0, b = 1) => v < a ? a : v > b ? b : v;
+const eineAus = t => 1 - Math.pow(1 - t, 3);
+
+/* ---------- Kabel-Farbe (wie Skins) und kleiner Merkzettel im Browser ---------- */
+const FARBEN = {
+  blau:  { name: 'Blau', ton: 205, hex: '#00aaff', hell: '#a9d3ff' },
+  rot:   { name: 'Rot',  ton: 352, hex: '#ff2b4f', hell: '#ffb9c4' },
+  gruen: { name: 'Grün', ton: 135, hex: '#22e06a', hell: '#b6f7cc' },
+  gold:  { name: 'Gold', ton: 44,  hex: '#ffb81f', hell: '#ffe6a3' },
+};
+const SPEICHER = 'vorixHQ';
+function merkLesen() { try { return JSON.parse(localStorage.getItem(SPEICHER)) || {}; } catch (e) { return {}; } }
+function merkSchreiben(neu) { try { localStorage.setItem(SPEICHER, JSON.stringify(Object.assign(merkLesen(), neu))); } catch (e) { /* geht z. B. im privaten Modus nicht – macht nichts */ } }
+let farbe = FARBEN[merkLesen().farbe] || FARBEN.blau;
+
+/* ---------- Alle Spiele (hier neue Spiele eintragen) ---------- */
+const GH = 'https://ibralox37.github.io/';
+const SPIELE = [
+  { name: 'Timer-Challange', emoji: '🎯', art: 'browser', bild: GH + 'icon-192.png', url: GH + 'Timer-/',
+    schilder: ['Browser', 'Bestenliste', '👤 Vorix-Konto'],
+    text: 'Das Timer-Spiel. Stoppe den Timer genau auf die Zielzeit, auf die Hundertstelsekunde. 9 Modi, Online-Konten und weltweite Bestenliste.' },
+  { name: 'Vorix Spotter', emoji: '📸', art: 'browser', bild: GH + 'spotter/icon-192.png', url: GH + 'spotter/',
+    schilder: ['Handy', 'KI', '👤 Vorix-Konto'],
+    text: 'Fotografiere echte Fahrzeuge und die KI erkennt sie, sogar das genaue Automodell. Sammle Sticker und fülle dein Album. VIP ist gratis.' },
+  { name: 'Jump over the Wall', emoji: '🧱', art: 'browser', bild: GH + 'jump-over-the-wall/icon-192.png', url: GH + 'jump-over-the-wall/',
+    schilder: ['Browser', 'Jump & Run', '👤 Vorix-Konto'],
+    text: 'Spring über Zacken und Mauern, in der Luft geht ein Doppelsprung. Vier Level, sechs Skins, und bei 100 wartet die große Mauer.' },
+  { name: 'Vorix Stack', emoji: '🟦', art: 'browser', bild: GH + 'vorix-stack/icon-192.png', url: GH + 'vorix-stack/',
+    schilder: ['Browser', '1 Finger', '👤 Vorix-Konto'],
+    text: 'Ein Block fährt hin und her, du tippst, und er fällt auf den Turm. Triffst du genau, gibt es PERFEKT. Wie hoch wird dein Turm?' },
+  { name: 'Vorix Loop', emoji: '➰', art: 'browser', bild: GH + 'vorix-loop/icon-192.png', url: GH + 'vorix-loop/',
+    schilder: ['Browser', 'Combos', '👤 Vorix-Konto'],
+    text: 'Zieh mit deinem Kometen Kreise um die Gegner und fang sie ein. Je mehr in einem Kreis, desto mehr Punkte. Wellen, Bomben und Bosse.' },
+  { name: 'Pancake Obby', emoji: '🥞', art: 'roblox', bild: null, url: 'https://www.roblox.com/de/games/102227354265210/Pancake-Obby',
+    schilder: ['Parcours'],
+    text: 'Der Hindernis-Parcours mit dem Mini-Pfannkuchen. Community-Mitglieder bekommen 5 Gratis-Skips.' },
+  { name: 'Knee Slide Legends', emoji: '⚽', art: 'roblox', bild: GH + 'knee-slide-legends.png', url: 'https://www.roblox.com/de/games/133866118110231/Knee-Slide-Legends',
+    schilder: ['Fußball'],
+    text: 'Schieß ein Tor am Torwart vorbei und rutsch auf den Knien zur Legende. Bau deinen vermüllten Bolzplatz zum Stadion aus.' },
+  { name: 'Nitro City', emoji: '🏎️', art: 'roblox', bild: GH + 'nitro-city.png', url: 'https://www.roblox.com/de/games/87137245101629/Nitro-City', neu: true,
+    schilder: ['Rennen'],
+    text: 'Rase mit Sportwagen durch eine riesige Stadt und fahr gegen die Zeit. Hol dir Medaillen, tune Motor, Turbo und Nitro.' },
+];
+
+function el(tag, klasse, text) {
+  const e = document.createElement(tag);
+  if (klasse) e.className = klasse;
+  if (text != null) e.textContent = text;
+  return e;
+}
+function bildOderEmoji(s, klasse) {
+  if (s.bild) {
+    const i = el('img', klasse); i.src = s.bild; i.alt = ''; i.loading = 'lazy';
+    i.onerror = () => { const e = el('div', klasse, s.emoji); i.replaceWith(e); };
+    return i;
+  }
+  const e = el('div', klasse, s.emoji);
+  e.style.background = 'linear-gradient(160deg,#ffb347,#a0622d)';
+  return e;
+}
+
+/* Spiel-Karten bauen */
+const gitter = document.getElementById('spieleGitter');
+SPIELE.forEach((s, i) => {
+  const rein = el('div', 'karte-rein'); rein.dataset.art = s.art;
+  const karte = el('div', 'karte');
+  karte.append(el('div', 'rahmen'));
+  const k = el('div', 'koerper');
+  k.append(el('div', 'glanz'), el('div', 'nummer', String(i + 1).padStart(2, '0')));
+  const oben = el('div', 'oben');
+  oben.append(bildOderEmoji(s, 'bild'));
+  const kopf = el('div');
+  kopf.append(el('h3', '', s.emoji + ' ' + s.name));
+  const sch = el('div', 'schilder');
+  if (s.neu) sch.append(el('span', 'neu', 'NEU'));
+  if (s.art === 'roblox') sch.append(el('span', 'roblox', 'Roblox'));
+  s.schilder.forEach(t => sch.append(el('span', '', t)));
+  sch.append(el('span', '', 'Kostenlos'));
+  kopf.append(sch);
+  oben.append(kopf);
+  const los = el('a', 'knopf voll los magnet');
+  los.href = s.url; los.target = '_blank'; los.rel = 'noopener';
+  los.append(el('span', 'inner', s.art === 'roblox' ? '▶ AUF ROBLOX ↗' : '▶ SPIELEN ↗'));
+  k.append(oben, el('p', '', s.text), los);
+  karte.append(k);
+  rein.append(karte);
+  gitter.append(rein);
+});
+
+/* Geheime Karte: „Bald bei VORIX“. Was kommt, bleibt geheim, bis es so weit ist. */
+(function geheimKarte() {
+  const rein = el('div', 'karte-rein'); rein.dataset.art = 'geheim';
+  const karte = el('div', 'karte geheim');
+  karte.append(el('div', 'rahmen'));
+  const k = el('div', 'koerper');
+  k.append(el('div', 'glanz'), el('div', 'nummer', '??'));
+  const oben = el('div', 'oben'), schloss = el('div', 'bild schloss', '🔒'), kopf = el('div'), titel = el('h3', 'wirr', '???????');
+  const sch = el('div', 'schilder');
+  sch.append(el('span', 'bald', 'BALD'), el('span', '', 'Streng geheim'));
+  kopf.append(titel, sch);
+  oben.append(schloss, kopf);
+  const knopf = el('button', 'knopf rand los'); knopf.type = 'button';
+  knopf.append(el('span', 'inner', '🔒 NOCH GESPERRT'));
+  k.append(oben, el('p', '', 'Hier kommt das nächste VORIX-Spiel hin. Was es wird, ist noch geheim.'), knopf);
+  karte.append(k); rein.append(karte); gitter.append(rein);
+  // Das Schloss wackelt, wenn man es öffnen will
+  const wackeln = () => { schloss.classList.remove('wackel'); void schloss.offsetWidth; schloss.classList.add('wackel'); };
+  knopf.addEventListener('click', wackeln); schloss.addEventListener('click', wackeln);
+  // Buchstaben-Salat im Titel, solange die Karte zu sehen ist
+  let sichtbar = false;
+  new IntersectionObserver(es => { sichtbar = es[0].isIntersecting; }).observe(rein);
+  const zeichen = 'VORIX#?%&@$01<>/';
+  if (!RUHIG) setInterval(() => {
+    if (!sichtbar || document.hidden) return;
+    let s = ''; for (let i = 0; i < 7; i++) s += zeichen[Math.floor(Math.random() * zeichen.length)];
+    titel.textContent = s;
+  }, 90);
+})();
+
+/* Planeten für den Community-Orbit */
+(function orbitBauen() {
+  const orbit = document.getElementById('orbit');
+  const ring = orbit.querySelector('.ring');
+  SPIELE.forEach((s, i) => {
+    const w = i / SPIELE.length * Math.PI * 2;
+    const p = el('div', 'planet');
+    // Die Planeten sitzen genau auf dem Rand des Rings
+    p.style.left = (50 + Math.cos(w) * 50) + '%';
+    p.style.top = (50 + Math.sin(w) * 50) + '%';
+    const g = el('div', 'gegen');
+    g.append(bildOderEmoji(s, s.bild ? '' : 'emoji'));
+    p.append(g);
+    ring.append(p);
+  });
+})();
+
+/* Slogan Buchstabe für Buchstabe */
+const slogan = document.getElementById('slogan');
+[...'WE CREATE GAMES'].forEach((b, i) => {
+  const s = el('span', b === ' ' ? 'leer' : '', b === ' ' ? '' : b);
+  s.style.transitionDelay = (i * 0.045) + 's';
+  s.setAttribute('aria-hidden', 'true');
+  slogan.append(s);
+});
+if (!FEINE_MAUS) document.getElementById('heroTipp').textContent = '✦ Tipp aufs X und wisch durch die Kabel';
+
+/* Über-Text in Wörter teilen (*wort* = blau) */
+const scrub = document.getElementById('scrub');
+(function () {
+  const roh = scrub.textContent.trim().split(/\s+/);
+  scrub.textContent = '';
+  roh.forEach((w, i) => {
+    const blau = w.includes('*');
+    const s = el('span', 'w' + (blau ? ' blau' : ''), w.replace(/\*/g, ''));
+    scrub.append(s);
+    if (i < roh.length - 1) scrub.append(' ');
+  });
+})();
+const scrubWorte = [...scrub.querySelectorAll('.w')];
+
+/* =====================================================================
+   DAS LOGO: Text hinten, Kabel-X vorne
+   ===================================================================== */
+const Logo = (() => {
+  const wrap = document.getElementById('logo3d');
+  const cT = document.getElementById('logoText'), cK = document.getElementById('logoKabel');
+  const xt = cT.getContext('2d'), xk = cK.getContext('2d');
+  const W = 1000, H = 460, N = HANDY ? 110 : 150;  // Punkte pro Kabel
+  let dpr = 1, skal = 1, L = null, kabel = [], startZeit = -1, schock = 0, blitz = 0, sturmEnde = 0, kz = 0;
+  const lm = { x: -9999, y: -9999, an: false };   // Maus in Logo-Koordinaten
+
+  function catmull(p0, p1, p2, p3, t) {
+    const t2 = t * t, t3 = t2 * t;
+    return [
+      0.5 * ((2 * p1[0]) + (-p0[0] + p2[0]) * t + (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2 + (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3),
+      0.5 * ((2 * p1[1]) + (-p0[1] + p2[1]) * t + (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2 + (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3)
+    ];
+  }
+  // Glatte Linie durch die Punkte, gleichmäßig verteilt, mit Normalen
+  function bahn(pts) {
+    const d = [];
+    for (let i = 0; i < pts.length - 1; i++) {
+      const p0 = pts[Math.max(i - 1, 0)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(i + 2, pts.length - 1)];
+      for (let k = 0; k < 24; k++) d.push(catmull(p0, p1, p2, p3, k / 24));
+    }
+    d.push(pts[pts.length - 1]);
+    const len = [0];
+    for (let i = 1; i < d.length; i++) len.push(len[i - 1] + Math.hypot(d[i][0] - d[i - 1][0], d[i][1] - d[i - 1][1]));
+    const ges = len[len.length - 1];
+    const x = new Float32Array(N), y = new Float32Array(N), nx = new Float32Array(N), ny = new Float32Array(N), s = new Float32Array(N);
+    let j = 0;
+    for (let i = 0; i < N; i++) {
+      const ziel = ges * i / (N - 1);
+      while (j < len.length - 2 && len[j + 1] < ziel) j++;
+      const f = (ziel - len[j]) / ((len[j + 1] - len[j]) || 1);
+      x[i] = d[j][0] + (d[j + 1][0] - d[j][0]) * f;
+      y[i] = d[j][1] + (d[j + 1][1] - d[j][1]) * f;
+      s[i] = ziel;
+    }
+    for (let i = 0; i < N; i++) {
+      const a = Math.max(i - 1, 0), b = Math.min(i + 1, N - 1);
+      let tx = x[b] - x[a], ty = y[b] - y[a]; const l = Math.hypot(tx, ty) || 1;
+      nx[i] = -ty / l; ny[i] = tx / l;
+    }
+    return { x, y, nx, ny, s, ges };
+  }
+
+  function layout() {
+    xt.font = '900 100px Orbitron, Arial, sans-serif';
+    const w100 = xt.measureText('VORI').width;
+    const c100 = xt.measureText('V').actualBoundingBoxAscent || 72;
+    const S = Math.min(880 * 100 / (w100 + 1.5 * c100), 230 * 100 / c100);
+    const cap = c100 * S / 100, tw = w100 * S / 100;
+    const x0 = (W - (tw + 1.5 * cap)) / 2;
+    const top = H * 0.5 - 0.5 * cap;
+    xt.font = `900 ${S}px Orbitron, Arial, sans-serif`;
+    const bx = [];
+    ['V', 'O', 'R', 'I'].forEach((b, i) => bx.push(x0 + xt.measureText('VORI'.slice(0, i)).width));
+    L = { S, cap, tw, x0, top, base: top + cap, bxl: x0 + tw + 0.1 * cap, bx };
+    kabelBauen();
+  }
+
+  function kabelBauen() {
+    const { cap, bxl, top, x0 } = L;
+    const P = (u, v) => [bxl + u * cap, top + v * cap];
+    const uSchweif = (x0 - 0.15 * cap - bxl) / cap;
+    // Strich A: langer Schweif oben links, Knick, runter nach rechts, kleiner Haken
+    const A = bahn([P(uSchweif, -0.15), P(uSchweif * 0.55, -0.13), P(-0.2, -0.09), P(0.1, -0.03), P(0.3, 0.2), P(0.55, 0.54), P(0.74, 0.84), P(0.9, 0.975), P(1.08, 1.0), P(1.4, 0.99)]);
+    // Strich B: die lange Diagonale von unten links nach oben rechts
+    const B = bahn([P(-0.45, 1.42), P(0.0, 0.93), P(0.5, 0.41), P(0.9, 0.0), P(1.22, -0.38)]);
+    kabel = [];
+    const mach = (bahnObj, anzahl, radius, verzoeg, dauer, drehung) => {
+      for (let i = 0; i < anzahl; i++) {
+        kabel.push({
+          b: bahnObj, theta: i / anzahl * Math.PI * 2 + Math.random() * 0.4,
+          r: radius * (0.55 + Math.random() * 0.55), om: (0.55 + Math.random() * 0.5) * (Math.random() < 0.5 ? 1 : -1) * 0.9,
+          dreh: drehung * (0.8 + Math.random() * 0.4), phi: Math.random() * 6.3, wack: 0.1 + Math.random() * 0.18,
+          farbe: 196 + Math.random() * 18, hell: 0.75 + Math.random() * 0.35,
+          verz: verzoeg + i * 0.06, dauer,
+          puls: Math.random(), pulsTempo: 0.18 + Math.random() * 0.22,
+          px: new Float32Array(N), py: new Float32Array(N), pz: new Float32Array(N)
+        });
+      }
+    };
+    mach(B, HANDY ? 7 : 9, 0.085 * cap, 0.0, 1.3, 1.5);
+    mach(A, HANDY ? 6 : 8, 0.07 * cap, 0.35, 1.7, 1.4);
+  }
+
+  function groesse() {
+    const r = wrap.getBoundingClientRect();
+    if (!r.width) return;
+    dpr = Math.min(devicePixelRatio || 1, HANDY ? 1.75 : 2);
+    for (const c of [cT, cK]) { c.width = Math.round(r.width * dpr); c.height = Math.round(r.height * dpr); }
+    skal = r.width / W;
+    layout();
+  }
+
+  function rechnen(zeit, z) {
+    const cap = L.cap, R2 = (0.75 * cap) ** 2, RM = 0.75 * cap;
+    for (const c of kabel) {
+      const b = c.b;
+      for (let j = 0; j < N; j++) {
+        const t = j / (N - 1);
+        const env = Math.pow(Math.sin(Math.PI * t), 0.55);
+        const ang = c.theta + zeit * c.om + b.s[j] / cap * c.dreh;
+        const rr = c.r * env * (1 + 0.32 * Math.sin(zeit * 1.1 + b.s[j] * 0.012 + c.phi)) * (1 + schock * 3.2 * env)
+          + Math.sin(b.s[j] * 0.03 + zeit * 2.3 + c.phi) * c.wack * c.r * env;
+        const off = rr * Math.cos(ang);
+        let x = b.x[j] + b.nx[j] * off, y = b.y[j] + b.ny[j] * off;
+        if (lm.an) {
+          const dx = x - lm.x, dy = y - lm.y, d2 = dx * dx + dy * dy;
+          if (d2 < R2) { const d = Math.sqrt(d2) || 1, f = (1 - d / RM); const k = f * f * 0.42 * cap; x += dx / d * k; y += dy / d * k; }
+        }
+        c.px[j] = x; c.py[j] = y; c.pz[j] = Math.sin(ang);
+      }
+    }
+  }
+
+  function zeichneKabel(zeit) {
+    const ctx = xk;
+    ctx.setTransform(dpr * skal, 0, 0, dpr * skal, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    const wS = L.cap / 160, STUECK = 6;
+    const seit = startZeit < 0 ? 0 : zeit - startZeit;
+    for (const c of kabel) {
+      const prog = RUHIG ? 1 : eineAus(klemm((seit - c.verz) / c.dauer));
+      const jmax = Math.floor(prog * (N - 1));
+      if (jmax < 2) continue;
+      const ton = farbe.ton + c.farbe - 205;      // gewählte Kabel-Farbe, jedes Kabel leicht anders
+      for (let a = 0; a < jmax; a += STUECK) {
+        const e = Math.min(a + STUECK, jmax);
+        let zs = 0; for (let j = a; j <= e; j++) zs += c.pz[j];
+        const f = (zs / (e - a + 1) + 1) / 2;                       // 0 = hinten, 1 = vorne
+        const t = a / (N - 1);
+        const tap = Math.min(1, t * 6, (1 - t) * 9 + 0.05);
+        const hell = (0.3 + 0.7 * f) * c.hell * tap * (1 + blitz * 1.5);
+        const breite = (0.65 + 0.7 * f) * wS * (0.35 + 0.65 * tap);
+        ctx.beginPath(); ctx.moveTo(c.px[a], c.py[a]);
+        for (let j = a + 1; j <= e; j++) ctx.lineTo(c.px[j], c.py[j]);
+        ctx.strokeStyle = `hsla(${ton + 8},100%,50%,${0.07 * hell})`; ctx.lineWidth = 18 * breite; ctx.stroke();
+        ctx.strokeStyle = `hsla(${ton},100%,58%,${0.28 * hell})`; ctx.lineWidth = 6 * breite; ctx.stroke();
+        ctx.strokeStyle = `hsla(${ton - 6},100%,${78 + 14 * f}%,${Math.min(1, 0.95 * hell)})`; ctx.lineWidth = 1.7 * breite; ctx.stroke();
+      }
+      // Spitze beim Aufbauen
+      if (prog < 1) {
+        const x = c.px[jmax], y = c.py[jmax], r = 26 * wS;
+        const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+        g.addColorStop(0, 'rgba(255,255,255,.95)'); g.addColorStop(0.3, `hsla(${ton},100%,74%,.5)`); g.addColorStop(1, `hsla(${ton},100%,50%,0)`);
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
+      }
+      // Lichtpuls, der durchs Kabel saust
+      if (prog >= 1 && !RUHIG && c.puls <= 1) {
+        const jp = Math.min(N - 1, Math.floor(c.puls * (N - 1)));
+        const j0 = Math.max(0, jp - 10);
+        if (jp > 2) {
+          const tP = jp / (N - 1), tap = Math.min(1, tP * 6, (1 - tP) * 6);
+          ctx.beginPath(); ctx.moveTo(c.px[j0], c.py[j0]);
+          for (let j = j0 + 1; j <= jp; j++) ctx.lineTo(c.px[j], c.py[j]);
+          ctx.strokeStyle = `rgba(255,255,255,${0.85 * tap})`; ctx.lineWidth = 2.6 * wS; ctx.stroke();
+          const x = c.px[jp], y = c.py[jp], r = 20 * wS * (0.6 + 0.4 * (c.pz[jp] + 1) / 2);
+          const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+          g.addColorStop(0, `rgba(255,255,255,${0.9 * tap})`); g.addColorStop(0.35, `hsla(${ton},100%,72%,${0.4 * tap})`); g.addColorStop(1, `hsla(${ton},100%,50%,0)`);
+          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
+        }
+      }
+    }
+    ctx.globalCompositeOperation = 'source-over';
+  }
+
+  function zeichneText(zeit) {
+    const ctx = xt;
+    ctx.setTransform(dpr * skal, 0, 0, dpr * skal, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.font = `900 ${L.S}px Orbitron, Arial, sans-serif`;
+    ctx.textBaseline = 'alphabetic';
+    const seit = startZeit < 0 ? -1 : zeit - startZeit;
+    const verl = ctx.createLinearGradient(0, L.top, 0, L.base);
+    verl.addColorStop(0, '#ffffff'); verl.addColorStop(1, farbe.hell);
+    ['V', 'O', 'R', 'I'].forEach((b, i) => {
+      const p = RUHIG ? 1 : eineAus(klemm((seit - 0.15 - i * 0.09) / 0.9));
+      if (p <= 0) return;
+      ctx.globalAlpha = p;
+      ctx.save();
+      ctx.translate(0, (1 - p) * 40);
+      ctx.shadowColor = `hsla(${farbe.ton},100%,50%,.55)`; ctx.shadowBlur = 34 * skal * dpr;
+      ctx.fillStyle = verl;
+      ctx.fillText(b, L.bx[i], L.base);
+      ctx.restore();
+    });
+    ctx.globalAlpha = 1;
+    // Glanz, der über die Buchstaben wischt
+    if (!RUHIG && seit > 1.2) {
+      const zyk = ((seit - 1.2) % 5.5) / 1.6;
+      if (zyk < 1) {
+        const x = L.x0 - 200 + zyk * (L.tw + 400);
+        ctx.globalCompositeOperation = 'source-atop';
+        const g = ctx.createLinearGradient(x - 120, 0, x + 120, 0);
+        g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(0.5, 'rgba(255,255,255,.75)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+        ctx.globalCompositeOperation = 'source-over';
+      }
+    }
+  }
+
+  // Maus und Finger
+  function zuLogo(cx, cy) {
+    const r = cK.getBoundingClientRect();
+    lm.x = (cx - r.left) / r.width * W; lm.y = (cy - r.top) / r.height * H;
+  }
+  wrap.addEventListener('pointermove', e => { zuLogo(e.clientX, e.clientY); lm.an = true; });
+  wrap.addEventListener('pointerleave', () => { lm.an = false; });
+  wrap.addEventListener('pointerdown', e => {
+    zuLogo(e.clientX, e.clientY); lm.an = true;
+    schock = 1; blitz = 1;
+    for (const c of kabel) c.puls = Math.random() * 0.15;
+  });
+
+  let sichtbar = true;
+  new IntersectionObserver(es => { sichtbar = es[0].isIntersecting; }).observe(wrap);
+
+  let letzte = 0;
+  function bild(jetzt) {
+    const zeit = jetzt / 1000, dt = Math.min(0.05, zeit - letzte || 0.016); letzte = zeit;
+    if (!L || !sichtbar) return;
+    const tempo = RUHIG ? 0.25 : 1;
+    for (const c of kabel) { c.puls += c.pulsTempo * dt * (1 + schock * 4); if (c.puls > 1.25) c.puls = 0; }
+    schock *= Math.pow(0.04, dt); blitz *= Math.pow(0.02, dt);
+    const imSturm = zeit < sturmEnde;             // im Kabel-Sturm drehen die Kabel durch
+    kz += dt * tempo * (imSturm ? 3.5 : 1);
+    if (imSturm) { schock = Math.max(schock, 0.45 + 0.3 * Math.sin(zeit * 11)); blitz = Math.max(blitz, 0.35); }
+    rechnen(kz, 0);
+    zeichneKabel(zeit);
+    zeichneText(zeit);
+  }
+  return {
+    groesse, bild,
+    starte() { startZeit = performance.now() / 1000; },
+    istBereit: () => !!L,
+    knall() { schock = 1; blitz = 1; for (const c of kabel) c.puls = Math.random() * 0.15; },
+    sturm(sek) { sturmEnde = performance.now() / 1000 + sek; },
+  };
+})();
+
+/* Kleines Kabel-X in der Mitte des Community-Orbits */
+const KernX = (() => {
+  const c = document.getElementById('kernX'), ctx = c.getContext('2d');
+  let w = 0, sichtbar = false;
+  function groesse() { const r = c.getBoundingClientRect(); const d = Math.min(devicePixelRatio || 1, 2); w = r.width; c.width = c.height = Math.round(r.width * d); ctx.setTransform(d, 0, 0, d, 0, 0); }
+  new IntersectionObserver(es => { sichtbar = es[0].isIntersecting; }).observe(c);
+  const striche = [
+    [[0.12, 0.3], [0.45, 0.3], [0.88, 0.74]],
+    [[0.16, 0.86], [0.5, 0.5], [0.86, 0.14]]
+  ];
+  function bild(jetzt) {
+    if (!sichtbar || !w) return;
+    const t = jetzt / 1000;
+    ctx.clearRect(0, 0, w, w);
+    ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
+    striche.forEach((s, si) => {
+      for (let k = 0; k < 6; k++) {
+        const ph = k / 6 * Math.PI * 2 + t * (si ? 1.3 : -1.1);
+        const off = Math.cos(ph) * w * 0.03, f = (Math.sin(ph) + 1) / 2;
+        const dx = si ? 0.7 : -0.7;
+        ctx.beginPath();
+        ctx.moveTo(s[0][0] * w + off * dx, s[0][1] * w + off);
+        ctx.quadraticCurveTo(s[1][0] * w - off * 1.4, s[1][1] * w + off * dx, s[2][0] * w + off * dx, s[2][1] * w + off);
+        ctx.strokeStyle = `hsla(${farbe.ton + 6},100%,50%,${0.08 + 0.08 * f})`; ctx.lineWidth = w * 0.05; ctx.stroke();
+        ctx.strokeStyle = `hsla(${farbe.ton - 6},100%,80%,${0.4 + 0.5 * f})`; ctx.lineWidth = w * 0.007 * (0.6 + f); ctx.stroke();
+      }
+    });
+    ctx.globalCompositeOperation = 'source-over';
+  }
+  return { groesse, bild };
+})();
+
+/* =====================================================================
+   HINTERGRUND: schwebende Lichtpunkte, die sich verbinden
+   ===================================================================== */
+const Hintergrund = (() => {
+  const c = document.getElementById('hintergrund'), ctx = c.getContext('2d');
+  let w, h, d, punkte = [], schnuppen = [], naechsteSchnuppe = 0, kabelSpitze = 0;
+  function groesse() {
+    d = Math.min(devicePixelRatio || 1, 1.5); w = innerWidth; h = innerHeight;
+    c.width = w * d; c.height = h * d; ctx.setTransform(d, 0, 0, d, 0, 0);
+    const anzahl = Math.round(Math.min(90, w * h / 16000));
+    punkte = Array.from({ length: anzahl }, () => ({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - .5) * 0.25, vy: (Math.random() - .5) * 0.25, r: Math.random() * 1.6 + 0.4, z: Math.random() }));
+  }
+  function bild() {
+    ctx.clearRect(0, 0, w, h);
+    const sy = scrollY * 0.15;
+    for (const p of punkte) {
+      if (!RUHIG) { p.x += p.vx; p.y += p.vy; }
+      if (p.x < -20) p.x = w + 20; if (p.x > w + 20) p.x = -20;
+      if (p.y < -20) p.y = h + 20; if (p.y > h + 20) p.y = -20;
+      if (maus.bewegt) {
+        const dx = maus.x - p.x, dy = maus.y - p.y, dd = dx * dx + dy * dy;
+        if (dd < 160 * 160) { p.x += dx * 0.004; p.y += dy * 0.004; }
+      }
+    }
+    ctx.lineWidth = 0.6;
+    for (let i = 0; i < punkte.length; i++) {
+      const a = punkte[i], ay = ((a.y - sy * a.z) % h + h) % h;
+      for (let j = i + 1; j < punkte.length; j++) {
+        const b = punkte[j], by = ((b.y - sy * b.z) % h + h) % h;
+        const dx = a.x - b.x, dy = ay - by, dd = dx * dx + dy * dy;
+        if (dd < 130 * 130) {
+          ctx.strokeStyle = `rgba(0,150,255,${(1 - Math.sqrt(dd) / 130) * 0.22})`;
+          ctx.beginPath(); ctx.moveTo(a.x, ay); ctx.lineTo(b.x, by); ctx.stroke();
+        }
+      }
+      ctx.fillStyle = `rgba(140,210,255,${0.35 + a.z * 0.5})`;
+      ctx.beginPath(); ctx.arc(a.x, ay, a.r, 0, 7); ctx.fill();
+    }
+    const jetzt = performance.now() / 1000;
+    // Sternschnuppen: alle paar Sekunden eine
+    if (!RUHIG && jetzt > naechsteSchnuppe) { if (naechsteSchnuppe) schnuppe(); naechsteSchnuppe = jetzt + 3 + Math.random() * 6; }
+    ctx.lineCap = 'round';
+    for (let i = schnuppen.length - 1; i >= 0; i--) {
+      const s = schnuppen[i];
+      s.x += s.vx; s.y += s.vy; s.leben -= 0.017;
+      if (s.leben <= 0) { schnuppen.splice(i, 1); continue; }
+      const hx = s.x - s.vx * s.lang, hy = s.y - s.vy * s.lang, al = Math.min(1, s.leben * 3);
+      const g = ctx.createLinearGradient(hx, hy, s.x, s.y);
+      g.addColorStop(0, 'rgba(120,200,255,0)'); g.addColorStop(1, `rgba(255,255,255,${al})`);
+      ctx.strokeStyle = g; ctx.lineWidth = 1.8;
+      ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(s.x, s.y); ctx.stroke();
+      ctx.fillStyle = `rgba(255,255,255,${al})`; ctx.beginPath(); ctx.arc(s.x, s.y, 1.9, 0, 7); ctx.fill();
+    }
+    kabelZeichnen(jetzt);
+  }
+  function schnuppe() {
+    if (RUHIG) return;
+    const wink = (Math.random() < 0.5 ? 0.3 : Math.PI - 0.3) + (Math.random() - 0.5) * 0.35, tempo = 10 + Math.random() * 8;
+    schnuppen.push({ x: w * (0.1 + Math.random() * 0.8), y: h * Math.random() * 0.45, vx: Math.cos(wink) * tempo, vy: Math.sin(wink) * tempo, leben: 1, lang: 12 + Math.random() * 10 });
+  }
+  // Das Kabel, das beim Scrollen die Seite herunterwächst (3 Adern, die sich umeinander drehen).
+  // Es startet unten im Hero bei „SCROLL“ und schlängelt sich bis zum Ende der Seite.
+  function kabelMitte(y, y0) {
+    return w / 2 + Math.min(w * 0.46, w / 2 - 14) * Math.sin((y - y0) / 1900 * Math.PI * 2) + w * 0.025 * (Math.sin(y / 230 + 1.3) - Math.sin(y0 / 230 + 1.3));
+  }
+  function kabelZeichnen(jetzt) {
+    const y0 = h * 0.93, sy = scrollY;
+    const ende = document.documentElement.scrollHeight - 60;
+    const ziel = Math.max(y0, Math.min(ende, sy + h * 0.62));
+    kabelSpitze += (ziel - kabelSpitze) * (RUHIG ? 1 : 0.14);
+    if (kabelSpitze < y0 + 1) return;
+    const von = Math.max(y0, Math.floor((sy - 40) / 10) * 10), bis = Math.min(kabelSpitze, sy + h + 40);
+    if (bis <= von) return;
+    const ton = farbe.ton;
+    ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    for (let k = 0; k < 3; k++) {
+      const ader = y => kabelMitte(y, y0) + Math.cos(y / 70 + k * 2.094 + (RUHIG ? 0 : jetzt * 1.4)) * 7;
+      ctx.beginPath(); ctx.moveTo(ader(von), von - sy);
+      for (let y = von + 10; y < bis; y += 10) ctx.lineTo(ader(y), y - sy);
+      ctx.lineTo(ader(bis), bis - sy);
+      ctx.strokeStyle = `hsla(${ton + 8},100%,50%,.07)`; ctx.lineWidth = 12; ctx.stroke();
+      ctx.strokeStyle = `hsla(${ton},100%,60%,.2)`; ctx.lineWidth = 4; ctx.stroke();
+      ctx.strokeStyle = `hsla(${ton - 6},100%,82%,.6)`; ctx.lineWidth = 1.2; ctx.stroke();
+    }
+    if (kabelSpitze < sy + h + 30) {          // leuchtende Spitze
+      const x = kabelMitte(kabelSpitze, y0), y = kabelSpitze - sy;
+      const g = ctx.createRadialGradient(x, y, 0, x, y, 20);
+      g.addColorStop(0, 'rgba(255,255,255,.95)'); g.addColorStop(0.3, `hsla(${ton},100%,70%,.5)`); g.addColorStop(1, `hsla(${ton},100%,50%,0)`);
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 20, 0, 7); ctx.fill();
+      if (!RUHIG && Math.abs(ziel - kabelSpitze) > 8 && Math.random() < 0.35) Funken.spruehen(x, y, 1, 0.5);
+    }
+    ctx.globalCompositeOperation = 'source-over';
+  }
+  return { groesse, bild, schnuppe };
+})();
+
+/* =====================================================================
+   SCROLL-EFFEKTE
+   ===================================================================== */
+const nav = document.getElementById('nav');
+const fortschritt = document.getElementById('fortschritt');
+const heroInhalt = document.getElementById('heroInhalt');
+const logo3d = document.getElementById('logo3d');
+const laufband = document.getElementById('laufband');
+const reihen = [...laufband.querySelectorAll('.reihe')];
+const zeitstrahl = document.getElementById('zeitstrahl');
+const spurVoll = document.getElementById('spurVoll');
+const navLinks = [...document.querySelectorAll('.navlinks a')];
+const bereiche = navLinks.map(a => document.querySelector(a.getAttribute('href')));
+let neig = { rx: 0, ry: 0 }, scrubAn = -1;
+
+function scrollEffekte(zeit) {
+  const y = scrollY, vh = innerHeight;
+  const max = document.documentElement.scrollHeight - vh;
+  fortschritt.style.transform = `scaleX(${max > 0 ? y / max : 0})`;
+  nav.classList.toggle('fest', y > 40);
+
+  // Hero: Logo kippt nach hinten weg und wird kleiner
+  const p = klemm(y / vh);
+  let zx, zy;
+  if (maus.bewegt && FEINE_MAUS) { zx = maus.nx; zy = maus.ny; }
+  else { zx = Math.sin(zeit * 0.45) * 0.35; zy = Math.sin(zeit * 0.31) * 0.25; }
+  const zielRx = RUHIG ? 0 : (-zy * 12 + p * 38), zielRy = RUHIG ? 0 : zx * 18;
+  neig.rx += (zielRx - neig.rx) * 0.07; neig.ry += (zielRy - neig.ry) * 0.07;
+  if (p < 1) logo3d.style.transform = `rotateX(${neig.rx.toFixed(2)}deg) rotateY(${neig.ry.toFixed(2)}deg)`;
+  if (!RUHIG) {
+    heroInhalt.style.transform = `translateY(${(p * vh * 0.32).toFixed(1)}px) scale(${(1 - p * 0.22).toFixed(3)})`;
+    heroInhalt.style.opacity = klemm(1 - p * 1.25).toFixed(3);
+  }
+
+  // Laufband: Reihen fahren gegeneinander
+  const lr = laufband.getBoundingClientRect();
+  if (lr.bottom > 0 && lr.top < vh && !RUHIG) {
+    const lp = (vh - lr.top) / (vh + lr.height);
+    reihen.forEach(r => { const ri = +r.dataset.richtung; r.style.transform = `translateX(${ri < 0 ? -lp * 35 : -35 + lp * 35}%)`; });
+  }
+
+  // Zeitstrahl füllt sich
+  const zr = zeitstrahl.getBoundingClientRect();
+  spurVoll.style.transform = `scaleY(${klemm((vh * 0.6 - zr.top) / zr.height).toFixed(4)})`;
+
+  // Über-Text leuchtet Wort für Wort auf
+  const sr = scrub.getBoundingClientRect();
+  const sp = RUHIG ? 1 : klemm((vh * 0.85 - sr.top) / (sr.height + vh * 0.35));
+  const an = Math.round(sp * scrubWorte.length);
+  if (an !== scrubAn) { scrubWorte.forEach((w, i) => w.classList.toggle('an', i < an)); scrubAn = an; }
+
+  // Welcher Bereich ist gerade dran?
+  let aktiv = -1;
+  bereiche.forEach((b, i) => { if (b && b.getBoundingClientRect().top < vh * 0.45) aktiv = i; });
+  navLinks.forEach((a, i) => a.classList.toggle('aktiv', i === aktiv));
+}
+
+/* Reinfliegen, sobald etwas sichtbar wird */
+const beobachter = new IntersectionObserver(es => {
+  es.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add('da');
+    if (e.target.matches('.zahl')) hochzaehlen(e.target.querySelector('b'));
+    beobachter.unobserve(e.target);
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+document.querySelectorAll('[data-rein], [data-titel], .karte-rein').forEach(e => beobachter.observe(e));
+document.querySelectorAll('.spiele-gitter .karte-rein').forEach((k, i) => k.style.setProperty('--verz', (i % 3) * 0.1 + 's'));
+
+function hochzaehlen(b) {
+  const ziel = +b.dataset.zahl, nach = b.dataset.nach || '';
+  if (RUHIG || ziel === 0) { b.textContent = ziel + nach; return; }
+  const t0 = performance.now(), dauer = 1800;
+  (function schritt(t) {
+    const p = klemm((t - t0) / dauer), w = 1 - Math.pow(2, -10 * p);
+    b.textContent = Math.round(w * ziel) + nach;
+    if (p < 1) requestAnimationFrame(schritt);
+  })(t0);
+}
+
+/* =====================================================================
+   KARTEN, FILTER, KNÖPFE, FRAGEN
+   ===================================================================== */
+// 3D-Kippen der Spiel-Karten mit Lichtfleck
+if (FEINE_MAUS && !RUHIG) {
+  document.querySelectorAll('.karte').forEach(k => {
+    k.addEventListener('pointermove', e => {
+      const r = k.getBoundingClientRect(), px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+      k.classList.add('fuehlt');
+      k.style.setProperty('--ry', ((px - 0.5) * 14).toFixed(2) + 'deg');
+      k.style.setProperty('--rx', ((0.5 - py) * 12).toFixed(2) + 'deg');
+      k.style.setProperty('--gx', (px * 100).toFixed(1) + '%');
+      k.style.setProperty('--gy', (py * 100).toFixed(1) + '%');
+    });
+    k.addEventListener('pointerleave', () => { k.classList.remove('fuehlt'); k.style.setProperty('--rx', '0deg'); k.style.setProperty('--ry', '0deg'); });
+  });
+  // Magnet-Knöpfe ziehen sich zur Maus
+  document.querySelectorAll('.magnet').forEach(m => {
+    const inner = m.querySelector('.inner');
+    m.addEventListener('pointermove', e => {
+      const r = m.getBoundingClientRect(), dx = e.clientX - r.left - r.width / 2, dy = e.clientY - r.top - r.height / 2;
+      m.style.transform = `translate(${dx * 0.18}px, ${dy * 0.28}px)`;
+      if (inner) inner.style.transform = `translate(${dx * 0.1}px, ${dy * 0.12}px)`;
+    });
+    m.addEventListener('pointerleave', () => { m.style.transform = ''; if (inner) inner.style.transform = ''; });
+  });
+}
+
+// Filter: Alle / Browser / Roblox
+const filter = document.getElementById('filter'), schieber = filter.querySelector('.schieber');
+function schieberSetzen() {
+  const b = filter.querySelector('button.an');
+  schieber.style.left = b.offsetLeft + 'px'; schieber.style.width = b.offsetWidth + 'px';
+}
+filter.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+  filter.querySelectorAll('button').forEach(x => x.classList.toggle('an', x === b));
+  schieberSetzen();
+  const f = b.dataset.filter;
+  let n = 0;
+  document.querySelectorAll('.spiele-gitter .karte-rein').forEach(k => {
+    const passt = f === 'alle' || k.dataset.art === f;
+    k.classList.remove('da');
+    k.classList.toggle('versteckt', !passt);
+    if (passt) { k.style.setProperty('--verz', (n++ % 3) * 0.08 + 's'); }
+  });
+  requestAnimationFrame(() => requestAnimationFrame(() => document.querySelectorAll('.spiele-gitter .karte-rein:not(.versteckt)').forEach(k => k.classList.add('da'))));
+}));
+
+// Fragen auf- und zuklappen
+document.querySelectorAll('.frage button').forEach(b => b.addEventListener('click', () => {
+  const f = b.parentElement, offen = !f.classList.contains('offen');
+  f.classList.toggle('offen', offen); b.setAttribute('aria-expanded', offen);
+}));
+
+// Leuchtring an der Maus
+const zeiger = document.querySelector('.zeiger');
+const zp = { x: maus.x, y: maus.y };
+addEventListener('pointermove', e => {
+  maus.x = e.clientX; maus.y = e.clientY; maus.bewegt = true;
+  maus.nx = e.clientX / innerWidth * 2 - 1; maus.ny = e.clientY / innerHeight * 2 - 1;
+  if (FEINE_MAUS) zeiger.classList.add('sichtbar');
+}, { passive: true });
+document.addEventListener('pointerleave', () => zeiger.classList.remove('sichtbar'));
+if (FEINE_MAUS) {
+  document.addEventListener('pointerover', e => zeiger.classList.toggle('gross', !!(e.target.closest && e.target.closest('a, button, #logo3d'))));
+}
+
+/* =====================================================================
+   FUNKEN: sprühen bei jedem Klick. Hier lebt auch der Kabel-Sturm.
+   ===================================================================== */
+const Funken = (() => {
+  const c = document.getElementById('funken'), ctx = c.getContext('2d');
+  const STURM_DAUER = 3.6;
+  let w = 0, h = 0, teile = [], leer = true, sturmStart = -1, sturmKabel = [];
+  function groesse() {
+    const d = Math.min(devicePixelRatio || 1, 2); w = innerWidth; h = innerHeight;
+    c.width = Math.round(w * d); c.height = Math.round(h * d); ctx.setTransform(d, 0, 0, d, 0, 0);
+  }
+  function spruehen(x, y, anzahl, kraft) {
+    if (RUHIG) return;
+    for (let i = 0; i < anzahl; i++) {
+      const a = Math.random() * Math.PI * 2, v = (1.5 + Math.random() * 6.5) * kraft;
+      teile.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 1.5 * kraft, leben: 1, tempo: 0.9 + Math.random() * 1.8, dick: 0.8 + Math.random() * 1.8, ton: farbe.ton + (Math.random() - 0.5) * 24 });
+    }
+    if (teile.length > 700) teile.splice(0, teile.length - 700);
+  }
+  // Kabel-Sturm: 11 Kabel schießen quer über den Bildschirm
+  function sturm() {
+    sturmStart = performance.now() / 1000;
+    sturmKabel = Array.from({ length: 11 }, (_, i) => ({
+      y: h * (0.08 + 0.84 * Math.random()), amp: 30 + Math.random() * 90, f: 0.004 + Math.random() * 0.006,
+      sp: (2 + Math.random() * 5) * (Math.random() < 0.5 ? 1 : -1), ph: Math.random() * 6.3,
+      verz: i * 0.07, ton: farbe.ton + (Math.random() - 0.5) * 20, rueck: i % 2 === 1
+    }));
+  }
+  function sturmY(k, x, zeit) { return k.y + Math.sin(x * k.f + zeit * k.sp + k.ph) * k.amp + Math.sin(x * k.f * 3.1 - zeit * k.sp * 1.7) * k.amp * 0.22; }
+  function sturmZeichnen(t, zeit) {
+    const aus = klemm((STURM_DAUER - t) / 0.7);
+    for (const k of sturmKabel) {
+      const p = eineAus(klemm((t - k.verz) / 0.55));
+      if (p <= 0) continue;
+      const bis = (w + 80) * p;
+      ctx.beginPath();
+      for (let s = 0; s <= bis; s += 16) {
+        const x = k.rueck ? w + 40 - s : s - 40;
+        if (s === 0) ctx.moveTo(x, sturmY(k, x, zeit)); else ctx.lineTo(x, sturmY(k, x, zeit));
+      }
+      ctx.strokeStyle = `hsla(${k.ton + 8},100%,50%,${0.1 * aus})`; ctx.lineWidth = 16; ctx.stroke();
+      ctx.strokeStyle = `hsla(${k.ton},100%,60%,${0.3 * aus})`; ctx.lineWidth = 5; ctx.stroke();
+      ctx.strokeStyle = `hsla(${k.ton - 6},100%,88%,${0.9 * aus})`; ctx.lineWidth = 1.6; ctx.stroke();
+      if (p < 1) { const x = k.rueck ? w + 40 - bis : bis - 40; spruehen(x, sturmY(k, x, zeit), 3, 0.9); }
+    }
+    if (Math.random() < 0.25) spruehen(Math.random() * w, Math.random() * h, 10, 1.1);
+  }
+  function bild(zeit, dt) {
+    const imSturm = sturmStart >= 0 && zeit - sturmStart < STURM_DAUER;
+    if (!teile.length && !imSturm) { if (!leer) { ctx.clearRect(0, 0, w, h); leer = true; } return; }
+    leer = false;
+    ctx.clearRect(0, 0, w, h);
+    ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    if (imSturm) sturmZeichnen(zeit - sturmStart, zeit);
+    const k = dt * 60, brems = Math.pow(0.985, k);
+    for (let i = teile.length - 1; i >= 0; i--) {
+      const p = teile[i], ax = p.x, ay = p.y;
+      p.vy += 0.2 * k; p.vx *= brems; p.vy *= brems; p.x += p.vx * k; p.y += p.vy * k; p.leben -= p.tempo * dt;
+      if (p.leben <= 0) { teile.splice(i, 1); continue; }
+      ctx.strokeStyle = `hsla(${p.ton},100%,${62 + 34 * p.leben}%,${p.leben})`;
+      ctx.lineWidth = p.dick * (0.4 + 0.6 * p.leben);
+      ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(p.x, p.y); ctx.stroke();
+    }
+    ctx.globalCompositeOperation = 'source-over';
+  }
+  return { groesse, bild, spruehen, sturm };
+})();
+let letzteZeit = 0;
+
+/* ---------- Mini-Challenge: den Timer genau bei 5,00 stoppen ---------- */
+(function miniTimer() {
+  const uhr = document.getElementById('uhr'), knopf = document.getElementById('uhrKnopf');
+  const text = document.getElementById('uhrText'), best = document.getElementById('uhrBest');
+  const beschriftung = knopf.querySelector('.inner');
+  const ZIEL = 5, MAX = 9.99;
+  let laeuft = false, t0 = 0, raf = 0;
+  // Jede Ziffer bekommt ein eigenes Kästchen, damit die Zahl beim Laufen nicht wackelt
+  const zellen = [...'0,00'].map(z => { const s = el('span', z === ',' ? 'komma' : 'ziffer', z); uhr.append(s); return s; });
+  const alsText = s => s.toFixed(2).replace('.', ',');
+  function uhrZeigen(s) { const t = alsText(s); for (let i = 0; i < 4; i++) if (zellen[i].textContent !== t[i]) zellen[i].textContent = t[i]; }
+  function bestZeigen() {
+    const b = merkLesen().timerBest;
+    best.textContent = typeof b === 'number' ? (b === 0 ? 'Dein bester Versuch: PERFEKT, genau 5,00!' : 'Dein bester Versuch: nur ' + alsText(b) + ' s daneben') : '';
+  }
+  function tick() {
+    const s = (performance.now() - t0) / 1000;
+    if (s >= MAX) { stopp(MAX); return; }
+    uhrZeigen(s);
+    raf = requestAnimationFrame(tick);
+  }
+  function start() {
+    laeuft = true; t0 = performance.now();
+    uhr.className = 'uhr laeuft'; text.textContent = 'Läuft … stopp genau bei 5,00!';
+    beschriftung.textContent = '■ STOPP';
+    raf = requestAnimationFrame(tick);
+  }
+  function stopp(fest) {
+    cancelAnimationFrame(raf); laeuft = false;
+    const s = Math.round((fest != null ? fest : (performance.now() - t0) / 1000) * 100) / 100;
+    const daneben = Math.round(Math.abs(s - ZIEL) * 100) / 100;
+    uhrZeigen(s);
+    beschriftung.textContent = '↻ NOCHMAL';
+    let klasse, satz;
+    if (daneben === 0) { klasse = 'perfekt'; satz = 'PERFEKT! Genau 5,00. Besser geht es nicht!'; }
+    else if (daneben <= 0.05) { klasse = 'super'; satz = 'Mega knapp! Nur ' + alsText(daneben) + ' s daneben.'; }
+    else if (daneben <= 0.25) { klasse = 'gut'; satz = 'Gut! ' + alsText(daneben) + ' s daneben.'; }
+    else { klasse = 'daneben'; satz = (s >= MAX ? 'Zu spät! ' : '') + alsText(daneben) + ' s daneben. Versuch es nochmal!'; }
+    uhr.className = 'uhr ' + klasse; text.textContent = satz;
+    const alt = merkLesen().timerBest;
+    if (typeof alt !== 'number' || daneben < alt) merkSchreiben({ timerBest: daneben });
+    bestZeigen();
+    const r = uhr.getBoundingClientRect(), mx = r.left + r.width / 2, my = r.top + r.height / 2;
+    if (daneben === 0) { Funken.spruehen(mx, my, 90, 1.8); kabelSturm(); }
+    else if (daneben <= 0.05) Funken.spruehen(mx, my, 60, 1.5);
+    else if (daneben <= 0.25) Funken.spruehen(mx, my, 28, 1.1);
+  }
+  function druecken() { if (laeuft) stopp(); else start(); }
+  // pointerdown statt click: zählt in dem Moment, in dem man drückt, nicht erst beim Loslassen
+  knopf.addEventListener('pointerdown', e => { if (e.button) return; e.preventDefault(); druecken(); });
+  knopf.addEventListener('keydown', e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); if (!e.repeat) druecken(); } });
+  bestZeigen();
+})();
+
+/* ---------- Quiz: Welches VORIX-Spiel passt zu dir? ---------- */
+(function quiz() {
+  const feld = document.getElementById('quizFeld'), punkteBox = document.getElementById('quizPunkte');
+  // Jede Antwort gibt Punkte für bestimmte Spiele. Das Spiel mit den meisten Punkten gewinnt.
+  // (Geprüft: Jedes der 8 Spiele kann herauskommen.)
+  const FRAGEN = [
+    { f: 'Wo spielst du am liebsten?', a: [
+      ['📱 Am Handy', { 'Vorix Spotter': 2, 'Vorix Stack': 2, 'Vorix Loop': 1 }],
+      ['💻 Am PC im Browser', { 'Timer-Challange': 1, 'Jump over the Wall': 2, 'Vorix Loop': 1 }],
+      ['🎮 Auf Roblox', { 'Pancake Obby': 2, 'Knee Slide Legends': 2, 'Nitro City': 2 }] ] },
+    { f: 'Was magst du am meisten?', a: [
+      ['🏎️ Schnelle Autos', { 'Nitro City': 3, 'Vorix Spotter': 2 }],
+      ['⚽ Fußball', { 'Knee Slide Legends': 3 }],
+      ['🦘 Springen und Geschick', { 'Jump over the Wall': 3, 'Pancake Obby': 2, 'Vorix Stack': 1 }],
+      ['⏱️ Im richtigen Moment drücken', { 'Timer-Challange': 3, 'Vorix Stack': 2 }] ] },
+    { f: 'Wie spielst du?', a: [
+      ['⚡ Kurz und schnell zwischendurch', { 'Vorix Stack': 2, 'Timer-Challange': 2 }],
+      ['🔥 Ich jage Punkte und Combos', { 'Vorix Loop': 4, 'Jump over the Wall': 1 }],
+      ['🏗️ Ich will sammeln und ausbauen', { 'Vorix Spotter': 2, 'Knee Slide Legends': 2, 'Nitro City': 1 }],
+      ['🧗 Ich will Hindernisse schaffen', { 'Pancake Obby': 3, 'Jump over the Wall': 2 }] ] },
+  ];
+  let nr = 0, punkte = {};
+  function punkteMalen() {
+    punkteBox.textContent = '';
+    FRAGEN.forEach((_, i) => punkteBox.append(el('i', i < nr ? 'voll' : i === nr ? 'jetzt' : '')));
+  }
+  function wechsel(bauen) {            // Altes fliegt raus, Neues kommt rein
+    feld.classList.add('raus');
+    setTimeout(() => { feld.textContent = ''; bauen(); feld.classList.remove('raus'); }, RUHIG ? 0 : 260);
+  }
+  function frageZeigen() {
+    punkteMalen();
+    const fr = FRAGEN[nr];
+    feld.append(el('div', 'quiz-frage', fr.f));
+    const liste = el('div', 'quiz-antworten');
+    fr.a.forEach(([antwort, gibt], i) => {
+      const b = el('button', 'quiz-antwort', antwort); b.type = 'button'; b.style.setProperty('--verz', i * 0.06 + 's');
+      b.addEventListener('click', () => {
+        if (feld.classList.contains('raus')) return;       // Doppelklick zählt nicht doppelt
+        for (const name in gibt) punkte[name] = (punkte[name] || 0) + gibt[name];
+        nr++;
+        wechsel(nr < FRAGEN.length ? frageZeigen : ergebnisZeigen);
+      });
+      liste.append(b);
+    });
+    feld.append(liste);
+  }
+  function ergebnisZeigen() {
+    punkteMalen();
+    let sieger = SPIELE[0], max = -1;
+    SPIELE.forEach(s => { const p = punkte[s.name] || 0; if (p > max) { max = p; sieger = s; } });
+    const box = el('div', 'quiz-ergebnis');
+    box.append(el('div', 'quiz-klein', 'DEIN SPIEL IST'));
+    const zeile = el('div', 'quiz-sieger');
+    zeile.append(bildOderEmoji(sieger, 'bild'), el('h4', '', sieger.emoji + ' ' + sieger.name));
+    box.append(zeile, el('p', '', sieger.text));
+    const knoepfe = el('div', 'kg-knoepfe');
+    const los = el('a', 'knopf voll'); los.href = sieger.url; los.target = '_blank'; los.rel = 'noopener';
+    los.append(el('span', 'inner', sieger.art === 'roblox' ? '▶ AUF ROBLOX ↗' : '▶ SPIELEN ↗'));
+    const neu = el('button', 'knopf rand'); neu.type = 'button';
+    neu.append(el('span', 'inner', '↻ NOCHMAL'));
+    neu.addEventListener('click', () => { nr = 0; punkte = {}; wechsel(frageZeigen); });
+    knoepfe.append(los, neu); box.append(knoepfe);
+    feld.append(box);
+    const r = feld.getBoundingClientRect();
+    Funken.spruehen(r.left + r.width / 2, r.top + 60, 50, 1.4);
+  }
+  frageZeigen();
+})();
+
+// Funken bei jedem Klick (Tastatur-Klicks haben keine Position)
+document.addEventListener('click', e => { if (e.detail !== 0) Funken.spruehen(e.clientX, e.clientY, 16, 1); });
+
+/* ---------- Geheim-Code: „VORIX“ tippen (am Handy 5-mal schnell aufs X) = Kabel-Sturm ---------- */
+function kabelSturm() {
+  if (RUHIG) return;
+  Funken.sturm(); Logo.sturm(3.6); Logo.knall();
+  for (let i = 0; i < 14; i++) setTimeout(Hintergrund.schnuppe, i * 220);
+  const text = document.getElementById('sturmText'), haupt = document.querySelector('main');
+  text.classList.remove('an'); haupt.classList.remove('beben');
+  void text.offsetWidth;                       // damit die Animation neu startet
+  text.classList.add('an'); haupt.classList.add('beben');
+}
+let getippt = '', tipps = [];
+addEventListener('keydown', e => {
+  if (!e.key || e.key.length !== 1 || e.ctrlKey || e.metaKey || e.altKey) return;
+  getippt = (getippt + e.key.toLowerCase()).slice(-5);
+  if (getippt === 'vorix') { getippt = ''; kabelSturm(); }
+});
+logo3d.addEventListener('pointerdown', () => {
+  const j = performance.now(); tipps = tipps.filter(t => j - t < 2200); tipps.push(j);
+  if (tipps.length >= 5) { tipps = []; kabelSturm(); }
+});
+
+/* ---------- Kabel-Farbe wählen (wird im Browser gemerkt) ---------- */
+const farbwahl = document.getElementById('farbwahl');
+const heroLicht = document.querySelector('.hero-licht');
+function farbeSetzen(key, mitKnall) {
+  if (!FARBEN[key]) key = 'blau';
+  farbe = FARBEN[key];
+  const wurzel = document.documentElement.style;
+  wurzel.setProperty('--kabel', farbe.hex); wurzel.setProperty('--kabel-hell', farbe.hell);
+  heroLicht.style.background = `radial-gradient(closest-side, hsla(${farbe.ton},100%,50%,.2), hsla(${farbe.ton},100%,50%,.05) 55%, transparent)`;
+  farbwahl.querySelectorAll('button').forEach(b => b.classList.toggle('an', b.dataset.farbe === key));
+  if (mitKnall) { merkSchreiben({ farbe: key }); Logo.knall(); }
+}
+Object.keys(FARBEN).forEach(key => {
+  const b = el('button'); b.type = 'button'; b.dataset.farbe = key; b.title = FARBEN[key].name;
+  b.setAttribute('aria-label', 'Kabel-Farbe ' + FARBEN[key].name); b.style.setProperty('--f', FARBEN[key].hex);
+  b.addEventListener('click', () => farbeSetzen(key, true));
+  farbwahl.append(b);
+});
+farbeSetzen(merkLesen().farbe, false);
+
+/* =====================================================================
+   HAUPT-SCHLEIFE
+   ===================================================================== */
+function schleife(jetzt) {
+  requestAnimationFrame(schleife);   // zuerst, damit ein Fehler nie alles anhält
+  const zeit = jetzt / 1000, dt = Math.min(0.05, zeit - (letzteZeit || zeit)); letzteZeit = zeit;
+  Hintergrund.bild();
+  Logo.bild(jetzt);
+  KernX.bild(jetzt);
+  scrollEffekte(zeit);
+  Funken.bild(zeit, dt);
+  if (FEINE_MAUS) {
+    zp.x += (maus.x - zp.x) * 0.2; zp.y += (maus.y - zp.y) * 0.2;
+    zeiger.style.transform = `translate(${zp.x}px, ${zp.y}px)`;
+  }
+}
+
+function allesGroesse() { Hintergrund.groesse(); Logo.groesse(); KernX.groesse(); Funken.groesse(); schieberSetzen(); }
+let groesseTimer;
+addEventListener('resize', () => { clearTimeout(groesseTimer); groesseTimer = setTimeout(allesGroesse, 120); });
+
+/* =====================================================================
+   START: erst Schrift laden, Lade-Bildschirm, dann baut sich das X auf
+   ===================================================================== */
+const schriftDa = Promise.race([
+  document.fonts ? document.fonts.load('900 100px Orbitron').then(() => document.fonts.ready) : Promise.resolve(),
+  new Promise(r => setTimeout(r, 2500))
+]);
+
+function heroZeigen() {
+  document.body.classList.remove('laedt');
+  slogan.classList.add('da');
+  Logo.starte();
+  setTimeout(() => document.querySelectorAll('.hero-spaeter').forEach(e => e.classList.add('da')), RUHIG ? 0 : 1500);
+}
+
+const lader = document.getElementById('lader');
+if (RUHIG) {
+  lader.remove();
+  schriftDa.then(() => { allesGroesse(); heroZeigen(); requestAnimationFrame(schleife); });
+} else {
+  const balken = lader.querySelector('.lader-balken i'), zahl = lader.querySelector('.lader-zahl');
+  const t0 = performance.now(), dauer = 1300;
+  let schriftFertig = false; schriftDa.then(() => { schriftFertig = true; });
+  (function laden(t) {
+    let p = klemm((t - t0) / dauer);
+    if (!schriftFertig) p = Math.min(p, 0.9);
+    const e = eineAus(p);
+    balken.style.transform = `scaleX(${e})`;
+    zahl.textContent = String(Math.round(e * 100)).padStart(3, '0');
+    if (p < 1) { requestAnimationFrame(laden); return; }
+    allesGroesse();
+    requestAnimationFrame(schleife);
+    lader.classList.add('weg');
+    setTimeout(heroZeigen, 350);
+    setTimeout(() => lader.remove(), 1300);
+  })(t0);
+}
+</script>
+</body>
+</html>
