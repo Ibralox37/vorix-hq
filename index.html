@@ -452,6 +452,7 @@ main.beben { animation: beben .45s linear 4; }
 .post-eintrag .weg { background: none; border: 1px solid rgba(255,255,255,.18); color: #fff; border-radius: 10px; padding: 5px 11px; cursor: pointer; font-family: var(--rajdhani); font-size: 14px; font-weight: 600; }
 .post-eintrag .weg.sicher { background: #b3263a; border-color: #ff5c73; }
 .post-leer { color: rgba(255,255,255,.55); }
+.post-zahlen { margin-top: 10px; color: #b9f5d3; font-size: 16px; }
 @media (max-width: 860px) { .post-gitter { grid-template-columns: 1fr; } }
 
 /* ============ Maus-Licht ============ */
@@ -684,6 +685,7 @@ main.beben { animation: beben .45s linear 4; }
       <div class="post-regeln">Du brauchst ein Vorix-Konto. Höchstens 300 Zeichen und 3 Nachrichten am Tag. Bleib freundlich und schreib nichts Privates rein: keine Adresse, keine Telefonnummer, kein Passwort.</div>
       <div class="posteingang" id="posteingang" hidden>
         <h3>📬 POSTEINGANG <span id="postAnzahl"></span><small>Das siehst nur du als Admin.</small></h3>
+        <div class="post-zahlen" id="postZahlen" hidden></div>
         <div class="post-liste" id="postListe"></div>
       </div>
     </div>
@@ -1899,6 +1901,38 @@ document.getElementById('kAbmelden').addEventListener('click', async () => { awa
    ===================================================================== */
 const NACHRICHTEN_AN = false;
 const NACHRICHTEN_VORSCHAU = !NACHRICHTEN_AN && new URLSearchParams(location.search).has('vorschau');
+
+// BESUCHER ZÄHLEN (Papas Ja: Kennung ZE9). AUSGESCHALTET, bis der Server die Funktion hq_zahlen hat.
+// Gezählt wird nur eine Zahl pro Tag: einmal pro Browser und Tag, und nur auf der echten Adresse.
+// Es wird nichts über die Besucher gespeichert.
+const BESUCHE_AN = false;
+function serverRuf(funktion) {      // kleiner Abruf ohne die große Bibliothek
+  return fetch(KONTO.url + '/rest/v1/rpc/' + funktion, {
+    method: 'POST', body: '{}',
+    headers: { apikey: KONTO.schluessel, Authorization: 'Bearer ' + KONTO.schluessel, 'Content-Type': 'application/json' },
+  });
+}
+function besuchZaehlen() {
+  if (!BESUCHE_AN || location.hostname !== 'ibralox37.github.io') return;
+  const heute = new Date().toISOString().slice(0, 10);
+  if (merkLesen().besuchTag === heute) return;
+  merkSchreiben({ besuchTag: heute });
+  serverRuf('hq_besuch_zaehlen').catch(() => { /* kein Internet – dann eben nicht */ });
+}
+// Besucher-Zahlen im Posteingang (sieht nur der Admin, die Zahlen selbst sind nicht geheim)
+async function zahlenZeigen() {
+  const feld = document.getElementById('postZahlen');
+  if (NACHRICHTEN_VORSCHAU) { feld.hidden = false; feld.textContent = '👀 Besucher (BEISPIEL): heute 12 · letzte 7 Tage 85 · insgesamt 240'; return; }
+  if (!BESUCHE_AN) { feld.hidden = true; return; }
+  try {
+    const antwort = await serverRuf('hq_zahlen');
+    if (!antwort.ok) throw new Error('zahlen');
+    let d = await antwort.json();
+    if (Array.isArray(d)) d = d[0];
+    feld.hidden = false;
+    feld.textContent = '👀 Besucher: heute ' + d.besucher_heute + ' · letzte 7 Tage ' + d.besucher_woche + ' · insgesamt ' + d.besucher_gesamt;
+  } catch (e) { feld.hidden = true; }
+}
 const post = document.getElementById('post'), posteingang = document.getElementById('posteingang'), postListe = document.getElementById('postListe');
 function postFehlerText(e) {
   const m = String((e && (e.message || e.code)) || '');
@@ -1927,7 +1961,7 @@ function postZeigen() {
   });
   const admin = NACHRICHTEN_VORSCHAU || (an && k.admin === true);
   posteingang.hidden = !admin;
-  if (admin) postLaden();
+  if (admin) { postLaden(); zahlenZeigen(); }
 }
 post.querySelectorAll('.post-kasten').forEach(form => {
   const feld = form.querySelector('textarea'), zaehler = form.querySelector('.post-zaehler'), knopf = form.querySelector('button');
@@ -2002,6 +2036,7 @@ function postMalen(zeilen) {
   });
 }
 
+besuchZaehlen();
 kontoZeigen();
 setTimeout(kontoSpaeterPruefen, 1500);   // gilt die Anmeldung mit dem Vorix-Konto noch?
 
